@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import log from "./logger";
 dotenv.config();
 
 enum Environments {
@@ -30,8 +31,14 @@ class Environment {
     return process.env.DB_NAME;
   }
 
-  getDBCollection(): any {
-    return process.env.DB_COLLECTION;
+  getCollection(collection: string): string {
+    if (collection === "workspace") {
+      return process.env.WORKSPACE_COLLECTION;
+    } else if (collection === "users") {
+      return process.env.USERS_COLLECTION;
+    } else {
+      log.error("Collecton not found");
+    }
   }
 
   getHost(): string {

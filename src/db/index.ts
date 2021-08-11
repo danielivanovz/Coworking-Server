@@ -14,11 +14,10 @@ const options: MongoOptions = {
 
 const mongoURI: string = env.getDBUri();
 
-export const establishConnection = async (dbName: string, dbCollection: string) => {
+export const establishConnection = async (dbName: string) => {
   const client = new MongoClient(mongoURI, options);
   try {
     console.log(dbName);
-    console.log(dbCollection);
 
     const connected = await client
       .connect()
@@ -30,7 +29,6 @@ export const establishConnection = async (dbName: string, dbCollection: string) 
 
     db = connected.db(dbName);
 
-    collection = db.collection(dbCollection);
   } catch (error) {
     log.error;
   }
@@ -40,4 +38,3 @@ export const establishConnection = async (dbName: string, dbCollection: string) 
 
 export let db: Db;
 
-export let collection: Collection;
