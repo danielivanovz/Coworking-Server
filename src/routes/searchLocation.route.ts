@@ -7,14 +7,14 @@ const router = Router();
 
 router.get('/location', async(req:Request, res:Response) => {
     try {
-        const collection = env.getCollection('workspace');
-        const resDB = await db.collection(collection).find();
+        //const collection = env.getCollection('spaces');
+        const resDB = await db.collection('spaces').find({ location: `Bologna`}).toArray();
 
         res.setHeader('Content-type', 'application/json');
         res.end(JSON.stringify(resDB));
     } 
     catch(err){
-        console.log('Error finding space by location');  
+        console.error('Error finding space by location', err);  
     }
 
 
