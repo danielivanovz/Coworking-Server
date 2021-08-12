@@ -1,4 +1,5 @@
 {
-	"printWidth": 100,
-	"tsingleQuote": true
+  "printWidth": 100,
+  "tsingleQuote": true,
+  "useTabs": true
 }
