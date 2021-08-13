@@ -6,7 +6,8 @@
 	"scripts": {
 		"see": "tsc -w",
 		"build": "tsc",
-		"dev": "nodemon dist/app.js"
+		"dev": "nodemon dist/app.js",
+		"start": "node dist/app.js"
 	},
 	"author": "Daniel Ivanov",
 	"license": "MIT",
