@@ -1,19 +1,29 @@
-interface MongoOptions {
-	useUnifiedTopology: boolean;
-	ignoreUndefined: boolean;
-}
+import config from "./config";
 
-export const options: MongoOptions = {
+export const options: config.MongoOptions = {
 	useUnifiedTopology: true,
 	ignoreUndefined: true,
 };
 
-interface API {
-	statusCode: number;
-	availableAPIs: Array<String>;
+export const Root: config.API = {
+	statusCode: 200,
+	availableAPIs: [`/search/:location`, `/search/:location/:name`, `/search/:location/:name/:type`],
+};
+
+export enum Environments {
+	dev_environment = "string",
+	prod_environment = "prod",
 }
 
-export const HealthCheck: API = {
-	statusCode: 200,
-	availableAPIs: [`/search/:location`, `/search/:name`],
-};
+export enum Collections {
+	BILLING_USER_COLLECTION,
+	BILLING_WORKSPACE_COLLECTION,
+	COURSES_COLLECTION,
+	INVOICE_COLLECTION,
+	ORDER_COLLECTION,
+	PARTNER_COLLECTION,
+	REVIEW_COLLECTION,
+	SPACE_COLLECTION,
+	USERS_COLLECTION,
+	WORKSPACE_COLLECTION,
+}

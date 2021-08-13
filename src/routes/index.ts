@@ -1,10 +1,11 @@
 import { Router } from "express";
-import getLocation from "./searchLocation.route";
-import getHealth from "./healthCheck.route";
+import getWorkspace from "./workspaces.c";
+import getRoot from "./root.c";
 
 const router = Router();
 
-router.get("/", getHealth);
-router.get("/search/:location", getLocation);
+router.get("/", getRoot);
+router.get("/search/:location", getWorkspace);
+router.get("/search/:location/:name", getWorkspace);
 
 export default router;
