@@ -10,7 +10,7 @@ const startServer = async () => {
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: false }));
 
-	app.listen(8090, () => {
+	app.listen(80, "0.0.0.0", () => {
 		log.info(`Server is running at :8090`);
 	});
 
