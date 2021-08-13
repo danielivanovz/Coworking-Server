@@ -1,5 +1,4 @@
 import { Router, Request, Response } from "express";
-import { ObjectId } from "mongodb";
 import { db } from "../db";
 import env from "../env";
 import log from "../logger";
@@ -38,7 +37,7 @@ router.get("/user/:query", async (req: Request, res: Response) => {
 	}
 });
 
-router.get("/id/:username", async (req: Request, res: Response) => {
+router.get("/user-id/:username", async (req: Request, res: Response) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))

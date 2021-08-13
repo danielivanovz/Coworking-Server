@@ -7,7 +7,14 @@ export const options: config.MongoOptions = {
 
 export const Root: config.API = {
 	statusCode: 200,
-	availableAPIs: [`/search/:location`, `/search/:location/:name`],
+	availableAPIs: [
+		`/workspace/:location`,
+		`/workspace/:location/:name`,
+		`/workspaceid/:location`,
+		`/users`,
+		`/user/:query`,
+		`/userid/:username`,
+	],
 };
 
 export enum Environments {
