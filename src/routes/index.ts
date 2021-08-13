@@ -1,11 +1,18 @@
 import { Router } from "express";
-import getWorkspace from "./workspaces.c";
-import getRoot from "./root.c";
+import workspaceController from "./workspaces.c";
+import rootController from "./root.c";
+import usersController from "./user.c";
 
 const router = Router();
 
-router.get("/", getRoot);
-router.get("/search/:location", getWorkspace);
-router.get("/search/:location/:name", getWorkspace);
+router.get("/", rootController);
+
+router.get("/search/:location", workspaceController);
+router.get("/search/:location/:name", workspaceController);
+
+router.get("/id/:username", usersController);
+
+router.get("/users", usersController);
+router.get("/user/:query", usersController);
 
 export default router;
