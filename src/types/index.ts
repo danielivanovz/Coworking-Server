@@ -8,12 +8,13 @@ export const options: config.MongoOptions = {
 export const Root: config.API = {
 	statusCode: 200,
 	availableAPIs: [
+		`/workspace/:query`,
 		`/workspace/:location`,
 		`/workspace/:location/:name`,
-		`/workspaceid/:location`,
+		`/workspace-id/:name`,
 		`/users`,
 		`/user/:query`,
-		`/userid/:username`,
+		`/user-id/:username`,
 	],
 };
 
