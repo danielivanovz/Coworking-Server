@@ -7,7 +7,7 @@ export const options: config.MongoOptions = {
 
 export const Root: config.API = {
 	statusCode: 200,
-	availableAPIs: [`/search/:location`, `/search/:location/:name`, `/search/:location/:name/:type`],
+	availableAPIs: [`/search/:location`, `/search/:location/:name`],
 };
 
 export enum Environments {
