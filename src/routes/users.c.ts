@@ -25,7 +25,7 @@ router.get("/user/:query", async (req: Request, res: Response) => {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.find({
-				[fieldQuery]: `${req.query[fieldQuery]}`,
+				[fieldQuery]: <string>req.query[fieldQuery],
 			})
 			.toArray();
 
