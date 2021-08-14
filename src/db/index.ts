@@ -1,12 +1,12 @@
 import { MongoClient, Db } from "mongodb";
 import log from "../logger";
 import env from "../env";
-import { options } from "../types";
+import { MongoOptions } from "../types";
 
 const mongoURI: string = env.getDBUri();
 
 export const establishConnection = async (dbName: string) => {
-	const client = new MongoClient(mongoURI, options);
+	const client = new MongoClient(mongoURI, MongoOptions);
 	try {
 		const connected = await client
 			.connect()

@@ -1,6 +1,6 @@
 import * as config from "./config";
 
-export const options: config.MongoOptions = {
+export const MongoOptions: config.MongoOptions = {
 	useUnifiedTopology: true,
 	ignoreUndefined: true,
 };
