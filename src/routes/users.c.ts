@@ -13,8 +13,6 @@ router.get("/users", async (req: Request, res: Response) => {
 			.find()
 			.toArray();
 
-		log.info(`${JSON.stringify(req.body)}`);
-
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
 		log.error("Error listing all users: ", error);
