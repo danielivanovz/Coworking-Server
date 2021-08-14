@@ -2,13 +2,14 @@ import { Router, Request, Response } from "express";
 import { db } from "../db";
 import env from "../env";
 import log from "../logger";
+import { Workspace } from "../models";
 import { Collections } from "../types";
 
 const router = Router();
 
 router.get("/workspaces", async (req: Request, res: Response) => {
 	try {
-		const response: object = await db
+		const response: Array<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
 			.find()
 			.toArray();
@@ -22,7 +23,7 @@ router.get("/workspaces", async (req: Request, res: Response) => {
 router.get("/workspace/:query", async (req: Request, res: Response) => {
 	try {
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase();
-		const response: object = await db
+		const response: Array<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
 			.find({
 				[fieldQuery]: <string>req.query[fieldQuery],
@@ -39,7 +40,7 @@ router.get("/workspace/:query", async (req: Request, res: Response) => {
 
 router.get("/workspace/:city/:name", async (req: Request, res: Response) => {
 	try {
-		const response: object = await db
+		const response: Array<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
 			.find({
 				"address.city": req.params["city"].toLowerCase(),
@@ -59,7 +60,10 @@ router.get("/workspace-id/:name", async (req: Request, res: Response) => {
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
 			.findOne({ name: { $regex: <string>req.params["name"] } });
 
-		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response._id));
+		res
+			.setHeader("Content-type", "application/json")
+			.status(200)
+			.end(JSON.stringify(<Workspace>response._id));
 	} catch (error) {
 		log.error("Error finding space by city with error: ", error);
 	}

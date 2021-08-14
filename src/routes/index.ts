@@ -14,10 +14,10 @@ router.get("/workspace/:query", workspaceController);
 router.get("/workspace/:location/:name", workspaceController);
 
 router.get("/user-id/:username", userController);
-router.get("/?users", userController);
+router.get("/users", userController);
 router.get("/user/:query", userController);
 
 router.get("/spaces", spaceController);
-router.get("/:retrieve", spaceController);
+router.get("/space/retrieve", spaceController);
 
 export default router;

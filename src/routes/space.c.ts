@@ -4,12 +4,13 @@ import env from "../env";
 import log from "../logger";
 import { Collections } from "../types";
 import { ObjectId } from "mongodb";
+import { Space } from "../models";
 
 const router = Router();
 
 router.get("/spaces", async (req: Request, res: Response) => {
 	try {
-		const response = await db
+		const response: Array<Space> = await db
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
 			.find()
 			.toArray();
@@ -20,14 +21,18 @@ router.get("/spaces", async (req: Request, res: Response) => {
 	}
 });
 
-router.get("/:retrieve", async (req: Request, res: Response) => {
+router.get("/space/retrieve", async (req: Request, res: Response) => {
 	try {
 		console.log(req.query);
+
 		const response = await db
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
 			.findOne(new ObjectId(<string>req.query.id));
 
-		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
+		res
+			.setHeader("Content-type", "application/json")
+			.status(200)
+			.end(JSON.stringify(<Space>response));
 	} catch (error) {
 		log.error("Error finding object by ID", error);
 	}
