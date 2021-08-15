@@ -1,28 +1,14 @@
 import { Router } from "express";
-import * as workspaceController from ".././controllers/workspaces.c";
-import * as userController from ".././controllers/users.c";
-import * as spaceController from "../controllers/space.c";
-import rootController from "./pages/root.c";
-import errorController from "./pages/error.c";
+
+import pageRoot from "./pages/pageRoot.c";
+import page404 from "./pages/page404.c";
+import v1 from "./v1/";
 
 const router = Router();
 
-router.get("/workspace-id/:name", workspaceController.getWorkspacesIDByName);
-router.get("/workspaces", workspaceController.getWorkspaces);
-router.get("/workspace/:query", workspaceController.getWorkspacesByQuery);
-router.get("/workspace/:location/:name", workspaceController.getWorkspacesByCityAndName);
+router.use("/v1", v1);
 
-router.post("/user", userController.addUser);
-router.delete("/user", userController.deleteUser);
-router.put("/user", userController.updateUser);
-router.get("/user-id/:username", userController.getUserIDbyUsername);
-router.get("/users", userController.getUsers);
-router.get("/user/:query", userController.getUserWithQuery);
-
-router.get("/spaces", spaceController.getSpace);
-router.get("/space/retrieve", spaceController.getSpaceByID);
-
-router.use(rootController);
-router.use(errorController);
+router.use(pageRoot);
+router.use(page404);
 
 export default router;
