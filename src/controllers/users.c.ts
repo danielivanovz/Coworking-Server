@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { ReturnDocument } from "mongodb";
 import { db } from "../db";
 import env from "../env";
 import log from "../logger";
@@ -70,8 +71,27 @@ export const deleteUser = async (req: Request, res: Response) => {
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.findOneAndDelete({ _id: new ObjectId(<string>req.body.id) });
 
-		res.setHeader("Content-type", "application/json").status(201).end();
+		res.setHeader("Content-type", "application/json").status(201).end(JSON.stringify(response.ok));
 	} catch (error) {
 		log.error("Error deleting user");
+	}
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+	try {
+		const response = await db
+			.collection(env.getCollection(Collections.USERS_COLLECTION))
+			.findOneAndUpdate(
+				{ _id: new ObjectId(<string>req.body.id) },
+				{ $set: req.body },
+				{ returnDocument: ReturnDocument.AFTER, projection: { _id: 0 } }
+			);
+
+		res
+			.setHeader("Content-type", "application/json")
+			.status(201)
+			.end(JSON.stringify(response.value));
+	} catch (error) {
+		log.error("Error updating user");
 	}
 };
