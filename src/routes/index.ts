@@ -1,23 +1,25 @@
 import { Router } from "express";
-import workspaceController from "./workspaces.c";
-import rootController from "./root.c";
-import userController from "./users.c";
-import spaceController from "./space.c";
+import * as workspaceController from ".././controllers/workspaces.c";
+import * as userController from ".././controllers/users.c";
+import * as spaceController from "../controllers/space.c";
+import rootController from "./pages/root.c";
+import errorController from "./pages/error.c";
 
 const router = Router();
 
-router.get("/", rootController);
+router.get("/workspace-id/:name", workspaceController.getWorkspacesIDByName);
+router.get("/workspaces", workspaceController.getWorkspaces);
+router.get("/workspace/:query", workspaceController.getWorkspacesByQuery);
+router.get("/workspace/:location/:name", workspaceController.getWorkspacesByCityAndName);
 
-router.get("/workspace-id/:name", workspaceController);
-router.get("/workspaces", workspaceController);
-router.get("/workspace/:query", workspaceController);
-router.get("/workspace/:location/:name", workspaceController);
+router.get("/user-id/:username", userController.getUserIDbyUsername);
+router.get("/users", userController.getUsers);
+router.get("/user/:query", userController.getUserWithQuery);
 
-router.get("/user-id/:username", userController);
-router.get("/users", userController);
-router.get("/user/:query", userController);
+router.get("/spaces", spaceController.getSpace);
+router.get("/space/retrieve", spaceController.getSpaceByID);
 
-router.get("/spaces", spaceController);
-router.get("/space/retrieve", spaceController);
+router.use(rootController);
+router.use(errorController);
 
 export default router;

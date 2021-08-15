@@ -5,9 +5,7 @@ import log from "../logger";
 import { User } from "../models";
 import { Collections } from "../types";
 
-const router = Router();
-
-router.get("/users", async (req: Request, res: Response) => {
+export const getUsers = async (req: Request, res: Response) => {
 	try {
 		const response: Array<User> = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -18,9 +16,9 @@ router.get("/users", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error listing all users: ", error);
 	}
-});
+};
 
-router.get("/user/:query", async (req: Request, res: Response) => {
+export const getUserWithQuery = async (req: Request, res: Response) => {
 	try {
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase();
 		const response: Array<User> = await db
@@ -34,9 +32,9 @@ router.get("/user/:query", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error listing all users: ", error);
 	}
-});
+};
 
-router.get("/user-id/:username", async (req: Request, res: Response) => {
+export const getUserIDbyUsername = async (req: Request, res: Response) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -49,6 +47,4 @@ router.get("/user-id/:username", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error listing all users: ", error);
 	}
-});
-
-export default router;
+};

@@ -6,9 +6,7 @@ import { Collections } from "../types";
 import { ObjectId } from "mongodb";
 import { Space } from "../models";
 
-const router = Router();
-
-router.get("/spaces", async (req: Request, res: Response) => {
+export const getSpace = async (req: Request, res: Response) => {
 	try {
 		const response: Array<Space> = await db
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
@@ -19,9 +17,9 @@ router.get("/spaces", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error finding space by city with error: ", error);
 	}
-});
+};
 
-router.get("/space/retrieve", async (req: Request, res: Response) => {
+export const getSpaceByID = async (req: Request, res: Response) => {
 	try {
 		console.log(req.query);
 
@@ -36,6 +34,4 @@ router.get("/space/retrieve", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error finding object by ID", error);
 	}
-});
-
-export default router;
+};

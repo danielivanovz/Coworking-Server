@@ -7,7 +7,7 @@ import { Collections } from "../types";
 
 const router = Router();
 
-router.get("/workspaces", async (req: Request, res: Response) => {
+export const getWorkspaces = async (req: Request, res: Response) => {
 	try {
 		const response: Array<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -18,9 +18,9 @@ router.get("/workspaces", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error finding space by city with error: ", error);
 	}
-});
+};
 
-router.get("/workspace/:query", async (req: Request, res: Response) => {
+export const getWorkspacesByQuery = async (req: Request, res: Response) => {
 	try {
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase();
 		const response: Array<Workspace> = await db
@@ -36,9 +36,9 @@ router.get("/workspace/:query", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error finding space by city with error: ", error);
 	}
-});
+};
 
-router.get("/workspace/:city/:name", async (req: Request, res: Response) => {
+export const getWorkspacesByCityAndName = async (req: Request, res: Response) => {
 	try {
 		const response: Array<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -52,9 +52,9 @@ router.get("/workspace/:city/:name", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error finding space by city and name with error: ", error);
 	}
-});
+};
 
-router.get("/workspace-id/:name", async (req: Request, res: Response) => {
+export const getWorkspacesIDByName = async (req: Request, res: Response) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -67,6 +67,4 @@ router.get("/workspace-id/:name", async (req: Request, res: Response) => {
 	} catch (error) {
 		log.error("Error finding space by city with error: ", error);
 	}
-});
-
-export default router;
+};

@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { Root } from "../types";
+import { Root } from "../../types";
 
 const router = Router();
 
