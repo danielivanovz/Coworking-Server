@@ -1,0 +1,19 @@
+sudo: false
+language: node_js
+node_js:
+  - "node"
+  - "12"
+  - "10"
+  - "8"
+branches:
+  only:
+    - master
+cache:
+  directories:
+    - "node_modules"
+services:
+  - mongodb
+before_script:
+  - npm run build
+script:
+  - npm run start
