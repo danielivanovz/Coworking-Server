@@ -1,4 +1,4 @@
-import * as config from "./config";
+import * as config from "./Config";
 
 export const MongoOptions: config.MongoOptions = {
 	useUnifiedTopology: true,

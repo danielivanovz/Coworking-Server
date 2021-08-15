@@ -13,7 +13,7 @@ dotenv.config();
 const startServer = async () => {
 	const app = createServer();
 	const HOST: string = env.getHost();
-	const PORT: number = Number(process.env.PORT) || 4000;
+	const PORT: number = Number(process.env.PORT) || env.getPort();
 
 	app.listen(PORT, () => {
 		log.info(`Server is running at http://${HOST}:${PORT}`);

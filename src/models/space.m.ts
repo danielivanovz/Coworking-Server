@@ -1,4 +1,4 @@
-import { Reservation, WorkspaceType } from "../types/commons";
+import { Reservation, WorkspaceType } from "../types/Commons";
 
 export interface Space {
 	reservation: Reservation;

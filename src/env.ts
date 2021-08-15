@@ -16,7 +16,7 @@ class Environment {
 		} else if (this.environment === Environments.dev_environment) {
 			return 8090;
 		} else {
-			return Number(process.env.PORT);
+			return 3000;
 		}
 	}
 
