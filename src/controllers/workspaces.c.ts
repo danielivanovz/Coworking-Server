@@ -1,11 +1,9 @@
-import { Router, Request, Response } from "express";
+import { Request, Response } from "express";
 import { db } from "../db";
 import env from "../env";
 import log from "../logger";
 import { Workspace } from "../models";
 import { Collections } from "../types";
-
-const router = Router();
 
 export const getWorkspaces = async (req: Request, res: Response) => {
 	try {
