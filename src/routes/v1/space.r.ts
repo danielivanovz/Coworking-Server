@@ -4,7 +4,7 @@ import * as spaceController from "../../controllers/space.c";
 
 const router = Router();
 
-router.get("/spaces", spaceController.getSpace);
-router.get("/space/retrieve", spaceController.getSpaceByID);
+router.get("/list", spaceController.getSpace);
+router.get("/retrieve", spaceController.getSpaceByID);
 
 export default router;

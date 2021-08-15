@@ -1,7 +1,7 @@
 import { ObjectId, Workspace } from ".";
 
 export interface Course {
-	_id: ObjectId;
+	_id?: ObjectId;
 	data: string;
 	description: string;
 	workspace_id: Workspace["_id"];
