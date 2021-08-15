@@ -1,8 +1,8 @@
-import { Router, Request, Response } from "express";
+import { Request, Response } from "express";
 import { db } from "../db";
 import env from "../env";
 import log from "../logger";
-import { User } from "../models";
+import { User, ObjectId } from "../models";
 import { Collections } from "../types";
 
 export const getUsers = async (req: Request, res: Response) => {
@@ -46,5 +46,32 @@ export const getUserIDbyUsername = async (req: Request, res: Response) => {
 			.end(JSON.stringify(<User>response._id));
 	} catch (error) {
 		log.error("Error listing all users: ", error);
+	}
+};
+
+export const addUser = async (req: Request, res: Response) => {
+	try {
+		const response = await db
+			.collection(env.getCollection(Collections.USERS_COLLECTION))
+			.insertOne(req.body);
+
+		res
+			.setHeader("Content-type", "application/json")
+			.status(201)
+			.end(JSON.stringify(response.insertedId));
+	} catch (error) {
+		log.error("Error adding new user");
+	}
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+	try {
+		const response = await db
+			.collection(env.getCollection(Collections.USERS_COLLECTION))
+			.findOneAndDelete({ _id: new ObjectId(<string>req.body.id) });
+
+		res.setHeader("Content-type", "application/json").status(201).end();
+	} catch (error) {
+		log.error("Error deleting user");
 	}
 };

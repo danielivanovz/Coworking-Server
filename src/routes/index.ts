@@ -12,6 +12,8 @@ router.get("/workspaces", workspaceController.getWorkspaces);
 router.get("/workspace/:query", workspaceController.getWorkspacesByQuery);
 router.get("/workspace/:location/:name", workspaceController.getWorkspacesByCityAndName);
 
+router.post("/user", userController.addUser);
+router.delete("/user", userController.deleteUser);
 router.get("/user-id/:username", userController.getUserIDbyUsername);
 router.get("/users", userController.getUsers);
 router.get("/user/:query", userController.getUserWithQuery);
