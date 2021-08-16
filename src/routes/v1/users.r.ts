@@ -4,10 +4,10 @@ import * as userController from "../../controllers/users.c";
 
 const router = Router();
 
-router.post("/", userController.addUser);
-router.delete("/", userController.deleteUser);
-router.put("/", userController.updateUser);
 router.get("/", userController.getUsers);
+router.post("/", userController.addUser);
+router.put("/", userController.updateUser);
+router.delete("/", userController.deleteUser);
 
 router.get("/retrieve", userController.getUserIDbyUsername);
 router.get("/:query", userController.getUserWithQuery);
