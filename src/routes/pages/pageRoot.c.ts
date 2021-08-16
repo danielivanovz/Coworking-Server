@@ -3,7 +3,7 @@ import { Root } from "../../types";
 
 const router = Router();
 
-router.get("/", (req: Request, res: Response) => {
+router.get("/api", (req: Request, res: Response) => {
 	res.setHeader("Content-type", "application/json").status(200).send(Root);
 });
 
