@@ -39,7 +39,7 @@ export const getUserIDbyUsername = async (req: Request, res: Response) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.findOne({ username: req.params["username"] });
+			.findOne({ username: req.params.username });
 
 		res
 			.setHeader("Content-type", "application/json")

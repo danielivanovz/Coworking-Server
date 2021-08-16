@@ -14,5 +14,8 @@ declare namespace NodeJS {
 		SPACE_COLLECTION: string;
 		USERS_COLLECTION: string;
 		WORKSPACE_COLLECTION: string;
+		SECRET_TOKEN: string;
+		ISSUER_TOKEN: string;
+		EXPIRE_TOKEN: string;
 	}
 }
