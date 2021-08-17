@@ -1,3 +1,4 @@
+import { Document } from "mongodb";
 import { ObjectId } from ".";
 
 export interface User {
