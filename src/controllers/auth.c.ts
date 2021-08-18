@@ -10,6 +10,7 @@ import { passwordCompare, passwordHash } from "../utils/passwordManager";
 
 export const login = async (req: Request, res: Response) => {
 	try {
+		log.info("here");
 		const data: User = req.body;
 		const response: Document = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -30,11 +31,11 @@ export const signup = async (req: Request, res: Response) => {
 	try {
 		const data: User = req.body;
 
-		if (
-			await db
-				.collection(env.getCollection(Collections.USERS_COLLECTION))
-				.findOne({ email: data.email })
-		) {
+		const response = await db
+			.collection(env.getCollection(Collections.USERS_COLLECTION))
+			.findOne({ email: data.email });
+
+		if (response) {
 			return res.status(409).send("User Already Exist. Please Login");
 		} else {
 			data.password = await passwordHash(data.password);

@@ -1,0 +1,35 @@
+GET http://localhost:5000/v1/api
+content-type: application/json
+
+# GET http://localhost:5000/v1/user
+# content-type: application/json
+
+# POST http://localhost:5000/v1/auth/signup
+# content-type: application/json
+
+# {
+#  "name": "claudia",
+#  "surname": "sica",
+#  "address": {
+#   "street": "via marconi",
+#   "street_number": "3",
+#   "city": "bologna",
+#   "country": "italia",
+#   "post_code": "40121"
+#  },
+#  "email": "claudia.venturi@gmail.com",
+#  "num": 345112233,
+#  "age": 28,
+#  "gender": "female",
+#  "password": "key3",
+#  "username": "claudia.venturi",
+#  "title": "freelancer",
+#  "media": "giuliabianchi.jpg"
+# }
+
+# DELETE http://localhost:5000/v1/user
+# content-type: application/json
+
+# {
+#  "id": "611d2b12c0b4d511eeada2b1"
+# }

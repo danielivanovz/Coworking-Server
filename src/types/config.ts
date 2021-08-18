@@ -5,5 +5,5 @@ export interface MongoOptions {
 
 export interface API {
 	statusCode: number;
-	availableAPIs: Array<String>;
+	availableAPIs: Object;
 }

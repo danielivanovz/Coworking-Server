@@ -8,13 +8,30 @@ export const MongoOptions: config.MongoOptions = {
 export const Root: config.API = {
 	statusCode: 200,
 	availableAPIs: [
-		`/workspace/:query`,
-		`/workspace/:location`,
-		`/workspace/:location/:name`,
-		`/workspace-id/:name`,
-		`/users`,
-		`/user/:query`,
-		`/user-id/:username`,
+		"/v1",
+		{
+			"/api": "root",
+			"/*": "404",
+			"/auth": {
+				"/login": "POST login",
+				"/signup": "POST register",
+			},
+			"/user": {
+				"/": "GET, POST, PUT, DELETE user",
+				"/retrieve": "GET User By ID",
+				"/:query": "GET User By Field",
+			},
+			"/workspace": {
+				"/": "GET, POST, PUT, DELETE workspace",
+				"/retrieve": "GET workspace By ID",
+				"/:query": "GET workspace By Field",
+				"/:location/:name": "GET workspace By location AND name",
+			},
+			"/space": {
+				"/": "GET, POST, PUT, DELETE space",
+				"/retrieve": "GET space By ID",
+			},
+		},
 	],
 };
 
@@ -35,3 +52,11 @@ export enum Collections {
 	USERS_COLLECTION,
 	WORKSPACE_COLLECTION,
 }
+
+// `*/`,
+// `/workspace/:location`,
+// `/workspace/:location/:name`,
+// `/workspace-id/:name`,
+// `/users`,
+// `/user/:query`,
+// `/user-id/:username`,
