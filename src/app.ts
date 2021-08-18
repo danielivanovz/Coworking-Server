@@ -20,7 +20,7 @@ const startServer = async () => {
 	try {
 		await establishConnection(dbName);
 	} catch (error) {
-		log.error(`Couldn't establist connection with the database.`);
+		log.error(`Couldn't establish connection with the database.`);
 	}
 };
 
