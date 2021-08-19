@@ -19,6 +19,21 @@ export const getUsers = async (req: Request, res: Response) => {
 	}
 };
 
+export const getUserByID = async (req: Request, res: Response) => {
+	try {
+		const response = await db
+			.collection(env.getCollection(Collections.USERS_COLLECTION))
+			.findOne(new ObjectId(<string>req.query.id));
+
+		res
+			.setHeader("Content-type", "application/json")
+			.status(200)
+			.end(JSON.stringify(<User>response));
+	} catch (error) {
+		log.error("Error finding user by ID", error);
+	}
+};
+
 export const getUserWithQuery = async (req: Request, res: Response) => {
 	try {
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase();
