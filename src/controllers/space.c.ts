@@ -5,6 +5,7 @@ import log from "../logger";
 import { Collections } from "../types";
 import { ObjectId, ReturnDocument } from "mongodb";
 import { Space } from "../models";
+import * as boom from "@hapi/boom";
 
 export const getSpace = async (req: Request, res: Response) => {
 	try {
@@ -15,7 +16,7 @@ export const getSpace = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		log.error("Error finding space by city with error: ", error);
+		boom.badRequest("Invalid city input", error);
 	}
 };
 
@@ -30,7 +31,7 @@ export const getSpaceByID = async (req: Request, res: Response) => {
 			.status(200)
 			.end(JSON.stringify(<Space>response));
 	} catch (error) {
-		log.error("Error finding object by ID", error);
+		boom.badRequest("Invalid ID input", error);
 	}
 };
 
@@ -45,7 +46,7 @@ export const addSpace = async (req: Request, res: Response) => {
 			.status(200)
 			.end(JSON.stringify(response.insertedId));
 	} catch (error) {
-		log.error("Error creating new space");
+		boom.expectationFailed("Error creating new space", error);
 	}
 };
 
@@ -57,7 +58,7 @@ export const deleteSpace = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		log.error("Error deleting new space");
+		boom.expectationFailed("Error deleting new space", error);
 	}
 };
 
@@ -73,6 +74,6 @@ export const updateSpace = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		log.error("Error deleting new space");
+		boom.expectationFailed("Error updating new space", error);
 	}
 };

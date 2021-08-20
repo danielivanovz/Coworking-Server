@@ -7,6 +7,7 @@ import { User } from "../models";
 import { Document, InsertOneResult } from "mongodb";
 import { createToken } from "../utils/tokenManager";
 import { passwordCompare, passwordHash } from "../utils/passwordManager";
+import * as boom from "@hapi/boom";
 
 export const login = async (req: Request, res: Response) => {
 	try {
@@ -20,7 +21,8 @@ export const login = async (req: Request, res: Response) => {
 			const token = await createToken(data.username);
 			res.status(200).send({ id: <User>response._id, token: token });
 		} else {
-			res.status(400).send("Invalid Credentials");
+			boom.badRequest("Invalid Credentials");
+			//res.status(400).send("Invalid Credentials");
 		}
 	} catch (error) {
 		log.error("Error finding user with error: ", error);
@@ -36,7 +38,7 @@ export const signup = async (req: Request, res: Response) => {
 			.findOne({ email: data.email });
 
 		if (response) {
-			return res.status(409).send("User Already Exist. Please Login");
+			return boom.conflict("User Already Exist. Please Login.") 
 		} else {
 			data.password = await passwordHash(data.password);
 			const response: InsertOneResult<Document> = await db
@@ -44,7 +46,12 @@ export const signup = async (req: Request, res: Response) => {
 				.insertOne(data);
 
 			const token = await createToken(data.username);
-			res.status(201).send({ id: response.insertedId, token: token });
+			if(token){
+				res.status(201).send({ id: response.insertedId, token: token });
+			}
+			else {
+				boom.notFound("Token not found");
+			}
 		}
 	} catch (error) {
 		log.error(error);

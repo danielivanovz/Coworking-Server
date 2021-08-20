@@ -2,6 +2,7 @@ import { establishConnection } from "./db";
 import createServer from "./server";
 import env from "./env";
 import log from "./logger";
+import * as boom from "@hapi/boom";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -20,7 +21,7 @@ const startServer = async () => {
 	try {
 		await establishConnection(dbName);
 	} catch (error) {
-		log.error(`Couldn't establish connection with the database.`);
+		boom.failedDependency("Could't establish database connection");
 	}
 };
 

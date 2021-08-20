@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
+import * as boom from "@hapi/boom";
 
 export const generateJwtTime = () => {
 	const expirationTime = new Date().getTime() + Number(process.env.EXPIRE_TOKEN) * 10000;
@@ -19,16 +20,14 @@ export const extractToken = async (req: Request, res: Response, next: NextFuncti
 	if (token) {
 		jwt.verify(token, process.env.SECRET_TOKEN, (error, decoded) => {
 			if (error) {
-				return res.status(404).json({ message: error.message, error });
+				return boom.notFound("token not found");
 			} else {
 				res.locals.jwt = decoded;
 				next();
 			}
 		});
 	} else {
-		return res.status(401).json({
-			message: "Authorization Denied",
-		});
+		return boom.unauthorized("Authorization Denied");
 	}
 };
 
@@ -36,8 +35,6 @@ export const updateToken = async (token: string, payload: string) => {
 	if (token) {
 		return createToken(payload);
 	} else {
-		return {
-			message: "Authorization Denied",
-		};
+		return boom.unauthorized("Authorization Denied");
 	}
 };
