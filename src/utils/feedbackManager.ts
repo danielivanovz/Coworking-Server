@@ -1,9 +1,13 @@
 import { NextFunction, response, Response } from "express";
-import { ErrorResponse, ErrorType, Feedback, FeedbackType } from "../types/commons";
+import { ErrorResponse, ErrorType, FeedbackType } from "../types/commons";
 
-response.customSuccess = function (httpStatusCode: number, message: string): Response {
+response.customSuccess = function (
+	httpStatusCode: number,
+	message: string,
+	type: FeedbackType
+): Response {
 	const data = new Date();
-	return this.status(httpStatusCode).json({ message, data });
+	return this.status(httpStatusCode).json({ type, message, data });
 };
 
 response.customError = function (
@@ -15,18 +19,19 @@ response.customError = function (
 	return this.status(httpStatusCode).json({ message, errorType, data });
 };
 
+import statusList from "../types/status";
+
 export const errorHandler = (
 	type: FeedbackType,
 	status: number,
-	message: string,
 	errorType: ErrorType,
 	res: Response,
 	next: NextFunction
 ) => {
 	switch (type) {
 		case FeedbackType.SUCCESS:
-			return res.customSuccess(status, message, errorType);
+			return res.customSuccess(status, type, statusList[status]);
 		case FeedbackType.FAILURE:
-			return res.customSuccess(status, message, errorType);
+			return res.customSuccess(status, statusList[status], errorType);
 	}
 };

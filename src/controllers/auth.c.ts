@@ -21,11 +21,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
 		if (response && (await passwordCompare(data.password, response.password))) {
 			const token = await createToken(data.username);
-			res.status(200).send({ id: <User>response._id, token: token });
+
+			const type: FeedbackType = FeedbackType.SUCCESS;
+			errorHandler(FeedbackType.SUCCESS, 200, null, res, next);
 		} else {
-			errorHandler(FeedbackType.FAILURE, 400, "Invalid Credentials", ErrorType.AUTH, res, next);
-			// boom.badRequest("Invalid Credentials");
-			//res.status(400).send("Invalid Credentials");
+			errorHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next);
 		}
 	} catch (error) {
 		log.error("Error finding user with error: ", error);
@@ -41,7 +41,7 @@ export const signup = async (req: Request, res: Response) => {
 			.findOne({ email: data.email });
 
 		if (response) {
-			return boom.conflict("User Already Exist. Please Login.");
+			return res.status(400).send("duplicato");
 		} else {
 			data.password = await passwordHash(data.password);
 			const response: InsertOneResult<Document> = await db
@@ -52,7 +52,7 @@ export const signup = async (req: Request, res: Response) => {
 			if (token) {
 				res.status(201).send({ id: response.insertedId, token: token });
 			} else {
-				boom.notFound("Token not found");
+				res.status(400).send("ciao");
 			}
 		}
 	} catch (error) {
