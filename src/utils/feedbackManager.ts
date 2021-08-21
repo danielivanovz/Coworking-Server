@@ -1,25 +1,32 @@
 import { NextFunction, response, Response } from "express";
-import { ErrorResponse, Feedback } from "../types/commons";
+import { ErrorResponse, ErrorType, Feedback, FeedbackType } from "../types/commons";
 
-response.customSuccess = function (
-	httpStatusCode: number,
-	message: string,
-	data: any = null
-): Response {
+response.customSuccess = function (httpStatusCode: number, message: string): Response {
+	const data = new Date();
 	return this.status(httpStatusCode).json({ message, data });
 };
 
 response.customError = function (
 	httpStatusCode: number,
 	message: ErrorResponse["message"],
-	errorType: ErrorResponse["errorType"],
-	data: any = null
+	errorType: ErrorResponse["errorType"]
 ): Response {
+	const data = new Date();
 	return this.status(httpStatusCode).json({ message, errorType, data });
 };
 
-export const errorHandler = (error: Feedback, req: Request, res: Response, next: NextFunction) => {
-	return res
-		.status(error.httpStatusCode)
-		.json({ type: error.type, message: error.message, data: error.data });
+export const errorHandler = (
+	type: FeedbackType,
+	status: number,
+	message: string,
+	errorType: ErrorType,
+	res: Response,
+	next: NextFunction
+) => {
+	switch (type) {
+		case FeedbackType.SUCCESS:
+			return res.customSuccess(status, message, errorType);
+		case FeedbackType.FAILURE:
+			return res.customSuccess(status, message, errorType);
+	}
 };
