@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
+import { ErrorType, FeedbackType } from "../types/commons";
+import { feedbackHandler } from "./feedbackManager";
 
 export const generateJwtTime = () => {
 	const expirationTime = new Date().getTime() + Number(process.env.EXPIRE_TOKEN) * 10000;
@@ -19,25 +21,27 @@ export const extractToken = async (req: Request, res: Response, next: NextFuncti
 	if (token) {
 		jwt.verify(token, process.env.SECRET_TOKEN, (error, decoded) => {
 			if (error) {
-				return res.status(404).json({ message: error.message, error });
+				feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, "Token not verified");
 			} else {
+				feedbackHandler(FeedbackType.SUCCESS, 200, null, res, next, "Verified Token");
 				res.locals.jwt = decoded;
 				next();
 			}
 		});
 	} else {
-		return res.status(401).json({
-			message: "Authorization Denied",
-		});
+		feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, "Invalid Token");
 	}
 };
 
-export const updateToken = async (token: string, payload: string) => {
+export const updateToken = async (
+	token: string,
+	payload: string,
+	res: Response,
+	next: NextFunction
+) => {
 	if (token) {
 		return createToken(payload);
 	} else {
-		return {
-			message: "Authorization Denied",
-		};
+		feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, "Invalid Token");
 	}
 };

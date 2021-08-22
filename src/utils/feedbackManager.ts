@@ -1,25 +1,54 @@
 import { NextFunction, response, Response } from "express";
-import { ErrorResponse, Feedback } from "../types/commons";
+import { ErrorResponse, ErrorType, FeedbackType } from "../types/commons";
+import statusDescription from "../types/status";
 
 response.customSuccess = function (
 	httpStatusCode: number,
 	message: string,
-	data: any = null
+	info: string
 ): Response {
-	return this.status(httpStatusCode).json({ message, data });
+	const date = new Date();
+	return this.status(httpStatusCode).json({ SUCCESS: { INFO: message, info, DATE: date } });
 };
 
 response.customError = function (
 	httpStatusCode: number,
-	message: ErrorResponse["message"],
-	errorType: ErrorResponse["errorType"],
-	data: any = null
+	message: string,
+	errorType: ErrorResponse["errorType"]
 ): Response {
-	return this.status(httpStatusCode).json({ message, errorType, data });
+	const date = new Date();
+	return this.status(httpStatusCode).json({
+		FAILURE: { TYPE: errorType, INFO: message, DATE: date },
+	});
 };
 
-export const errorHandler = (error: Feedback, req: Request, res: Response, next: NextFunction) => {
-	return res
-		.status(error.httpStatusCode)
-		.json({ type: error.type, message: error.message, data: error.data });
+export const feedbackHandler = (
+	type: FeedbackType,
+	httpStatusCode: number,
+	errorType: ErrorType,
+	res: Response,
+	next: NextFunction,
+	info?: string
+) => {
+	const column = ": ";
+	switch (type) {
+		case FeedbackType.SUCCESS:
+			return res.customSuccess(httpStatusCode, `${statusDescription[httpStatusCode]}`, info);
+		case FeedbackType.FAILURE:
+			return res.customError(
+				httpStatusCode,
+				`${statusDescription[httpStatusCode]}${info === undefined ? "" : column + info}`,
+				errorType
+			);
+	}
 };
+
+// SUCCESS
+//
+// {
+//    		"type": "SUCCESS",
+//     		"statusDescription": "Bad Request",
+//			"message": "Invalid Credentials.",
+// 			"info": "Authentication",
+//    		"data": "2021-08-22T08:12:29.748Z"
+// }

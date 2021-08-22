@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { db } from "../db";
 import env from "../env";
-import log from "../logger";
 import { Collections } from "../types";
 import { ObjectId, ReturnDocument } from "mongodb";
 import { Space } from "../models";
+import { FeedbackType, ErrorType } from "../types/commons";
+import { feedbackHandler } from "../utils";
+import { NextFunction } from "connect";
 
-export const getSpace = async (req: Request, res: Response) => {
+export const getSpace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: Array<Space> = await db
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
@@ -15,11 +17,11 @@ export const getSpace = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		log.error("Error finding space by city with error: ", error);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot get Space");
 	}
 };
 
-export const getSpaceByID = async (req: Request, res: Response) => {
+export const getSpaceByID = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
@@ -30,11 +32,18 @@ export const getSpaceByID = async (req: Request, res: Response) => {
 			.status(200)
 			.end(JSON.stringify(<Space>response));
 	} catch (error) {
-		log.error("Error finding object by ID", error);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get Space by ID"
+		);
 	}
 };
 
-export const addSpace = async (req: Request, res: Response) => {
+export const addSpace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
@@ -45,11 +54,11 @@ export const addSpace = async (req: Request, res: Response) => {
 			.status(200)
 			.end(JSON.stringify(response.insertedId));
 	} catch (error) {
-		log.error("Error creating new space");
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot add Space");
 	}
 };
 
-export const deleteSpace = async (req: Request, res: Response) => {
+export const deleteSpace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
@@ -57,11 +66,11 @@ export const deleteSpace = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		log.error("Error deleting new space");
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot delete Space");
 	}
 };
 
-export const updateSpace = async (req: Request, res: Response) => {
+export const updateSpace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
@@ -73,6 +82,6 @@ export const updateSpace = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		log.error("Error deleting new space");
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot update Space");
 	}
 };

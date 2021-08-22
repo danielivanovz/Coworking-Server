@@ -1,6 +1,6 @@
 declare namespace Express {
 	export interface Response {
-		customSuccess(httpStatusCode: number, message: string, data?: any): Response;
-		customError(httpStatusCode: number, message: string, errorType: string, data?: any): Response;
+		customSuccess(httpStatusCode: number, message: string, descritpion: string): Response;
+		customError(httpStatusCode: number, message: string, errorType: string): Response;
 	}
 }

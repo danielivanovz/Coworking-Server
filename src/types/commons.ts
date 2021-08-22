@@ -27,5 +27,10 @@ export interface Feedback {
 	httpStatusCode: number;
 	message: ErrorResponse["message"];
 	type: ErrorResponse["errorType"];
-	data: any;
+	data?: any;
+}
+
+export enum FeedbackType {
+	SUCCESS = "SUCCESS",
+	FAILURE = "FAILURE",
 }
