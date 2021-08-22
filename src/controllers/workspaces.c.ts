@@ -1,3 +1,4 @@
+import { NextFunction } from "connect";
 import { Request, Response } from "express";
 import {
 	Document,
@@ -8,11 +9,12 @@ import {
 } from "mongodb";
 import { db } from "../db";
 import env from "../env";
-import log from "../logger";
 import { ObjectId, Workspace } from "../models";
 import { Collections } from "../types";
+import { FeedbackType, ErrorType } from "../types/commons";
+import { errorHandler } from "../utils";
 
-export const getWorkspaces = async (req: Request, res: Response) => {
+export const getWorkspaces = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: Array<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -21,11 +23,11 @@ export const getWorkspaces = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		log.error("Error finding space by city with error: ", error);
+		errorHandler(FeedbackType.FAILURE, 400,"Cannot get Workspaces", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const getWorkspacesByQuery = async (req: Request, res: Response) => {
+export const getWorkspacesByQuery = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase();
 
@@ -40,11 +42,11 @@ export const getWorkspacesByQuery = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		log.error("Error finding space by city with error: ", error);
+		errorHandler(FeedbackType.FAILURE, 400,"Cannot get Workspaces by Query", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const getWorkspacesByCityAndName = async (req: Request, res: Response) => {
+export const getWorkspacesByCityAndName = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: Array<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -56,11 +58,11 @@ export const getWorkspacesByCityAndName = async (req: Request, res: Response) =>
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		log.error("Error finding space by city and name with error: ", error);
+		errorHandler(FeedbackType.FAILURE, 400,"Cannot get Workspaces by City and Name", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const getWorkspacesIDByName = async (req: Request, res: Response) => {
+export const getWorkspacesIDByName = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: Document = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -68,11 +70,11 @@ export const getWorkspacesIDByName = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response._id));
 	} catch (error) {
-		log.error("Error finding space by city with error: ", error);
+		errorHandler(FeedbackType.FAILURE, 400,"Cannot get Workspaces by ID", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const addWorkspace = async (req: Request, res: Response) => {
+export const addWorkspace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: InsertOneResult<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -83,11 +85,11 @@ export const addWorkspace = async (req: Request, res: Response) => {
 			.status(200)
 			.end(JSON.stringify(<ObjectId>response.insertedId));
 	} catch (error) {
-		log.error("Error creating new workspace");
+		errorHandler(FeedbackType.FAILURE, 400,"Cannot add Workspaces", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const deleteWorkspace = async (req: Request, res: Response) => {
+export const deleteWorkspace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: ModifyResult<Document> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -95,11 +97,11 @@ export const deleteWorkspace = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		log.error("Error deleting new workspace");
+		errorHandler(FeedbackType.FAILURE, 400,"Cannot delete Workspaces", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const updateWorkspace = async (req: Request, res: Response) => {
+export const updateWorkspace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: ModifyResult<Document> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -113,6 +115,6 @@ export const updateWorkspace = async (req: Request, res: Response) => {
 			.status(200)
 			.end(JSON.stringify(response.value));
 	} catch (error) {
-		log.error("Error updating new workspace");
+		errorHandler(FeedbackType.FAILURE, 400,"Cannot update Workspaces", ErrorType.GENERAL, res, next);
 	}
 };

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
-import * as boom from "@hapi/boom";
+import { ErrorType, FeedbackType } from "../types/commons";
+import { errorHandler } from "./feedbackManager";
 
 export const generateJwtTime = () => {
 	const expirationTime = new Date().getTime() + Number(process.env.EXPIRE_TOKEN) * 10000;
@@ -13,6 +14,7 @@ export const createToken = async (payload: string) => {
 		algorithm: "HS256",
 		expiresIn: generateJwtTime(),
 	});
+
 };
 
 export const extractToken = async (req: Request, res: Response, next: NextFunction) => {
@@ -20,21 +22,22 @@ export const extractToken = async (req: Request, res: Response, next: NextFuncti
 	if (token) {
 		jwt.verify(token, process.env.SECRET_TOKEN, (error, decoded) => {
 			if (error) {
-				return boom.notFound("token not found");
+				errorHandler(FeedbackType.FAILURE, 401, "Token not verified", ErrorType.AUTH, res, next);
 			} else {
+				errorHandler(FeedbackType.SUCCESS, 200, "Verified Token", null, res, next);
 				res.locals.jwt = decoded;
 				next();
 			}
 		});
 	} else {
-		return boom.unauthorized("Authorization Denied");
+		errorHandler(FeedbackType.FAILURE, 401, "Invalid Token", ErrorType.AUTH, res, next);
 	}
 };
 
-export const updateToken = async (token: string, payload: string) => {
+export const updateToken = async (token: string, payload: string, res: Response, next: NextFunction) => {
 	if (token) {
 		return createToken(payload);
 	} else {
-		return boom.unauthorized("Authorization Denied");
+		errorHandler(FeedbackType.FAILURE, 401, "Invalid Token", ErrorType.AUTH, res, next);
 	}
 };

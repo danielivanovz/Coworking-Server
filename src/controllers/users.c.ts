@@ -1,12 +1,14 @@
+import { NextFunction } from "connect";
 import { Request, Response } from "express";
 import { ReturnDocument } from "mongodb";
 import { db } from "../db";
 import env from "../env";
-import log from "../logger";
 import { User, ObjectId } from "../models";
 import { Collections } from "../types";
+import { FeedbackType, ErrorType } from "../types/commons";
+import { errorHandler } from "../utils";
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: Array<User> = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -15,11 +17,11 @@ export const getUsers = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		log.error("Error listing all users: ", error);
+		errorHandler(FeedbackType.FAILURE, 400, "Cannot get User", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const getUserByID = async (req: Request, res: Response) => {
+export const getUserByID = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -30,11 +32,11 @@ export const getUserByID = async (req: Request, res: Response) => {
 			.status(200)
 			.end(JSON.stringify(<User>response));
 	} catch (error) {
-		log.error("Error finding user by ID", error);
+		errorHandler(FeedbackType.FAILURE, 400, "Cannot get User by ID", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const getUserWithQuery = async (req: Request, res: Response) => {
+export const getUserWithQuery = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase();
 		const response: Array<User> = await db
@@ -46,11 +48,11 @@ export const getUserWithQuery = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		log.error("Error listing all users: ", error);
+		errorHandler(FeedbackType.FAILURE, 400, "Cannot get User with Query", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const getUserIDbyUsername = async (req: Request, res: Response) => {
+export const getUserIDbyUsername = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -61,11 +63,11 @@ export const getUserIDbyUsername = async (req: Request, res: Response) => {
 			.status(200)
 			.end(JSON.stringify(<User>response._id));
 	} catch (error) {
-		log.error("Error listing all users: ", error);
+		errorHandler(FeedbackType.FAILURE, 400, "Cannot get User ID by Username", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const addUser = async (req: Request, res: Response) => {
+export const addUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -76,11 +78,11 @@ export const addUser = async (req: Request, res: Response) => {
 			.status(201)
 			.end(JSON.stringify(response.insertedId));
 	} catch (error) {
-		log.error("Error adding new user");
+		errorHandler(FeedbackType.FAILURE, 400, "Cannot add User", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -88,11 +90,11 @@ export const deleteUser = async (req: Request, res: Response) => {
 
 		res.setHeader("Content-type", "application/json").status(201).end(JSON.stringify(response.ok));
 	} catch (error) {
-		log.error("Error deleting user");
+		errorHandler(FeedbackType.FAILURE, 400, "Cannot delete User", ErrorType.GENERAL, res, next);
 	}
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
@@ -107,6 +109,6 @@ export const updateUser = async (req: Request, res: Response) => {
 			.status(201)
 			.end(JSON.stringify(response.value));
 	} catch (error) {
-		log.error("Error updating user");
+		errorHandler(FeedbackType.FAILURE, 400, "Cannot update User", ErrorType.GENERAL, res, next);
 	}
 };
