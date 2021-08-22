@@ -6,7 +6,7 @@ import env from "../env";
 import { User, ObjectId } from "../models";
 import { Collections } from "../types";
 import { FeedbackType, ErrorType } from "../types/commons";
-import { errorHandler } from "../utils";
+import { feedbackHandler } from "../utils";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -17,7 +17,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot get User", ErrorType.GENERAL, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot get User");
 	}
 };
 
@@ -32,7 +32,14 @@ export const getUserByID = async (req: Request, res: Response, next: NextFunctio
 			.status(200)
 			.end(JSON.stringify(<User>response));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot get User by ID", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get User by ID"
+		);
 	}
 };
 
@@ -48,7 +55,14 @@ export const getUserWithQuery = async (req: Request, res: Response, next: NextFu
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot get User with Query", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get User with Query"
+		);
 	}
 };
 
@@ -63,7 +77,14 @@ export const getUserIDbyUsername = async (req: Request, res: Response, next: Nex
 			.status(200)
 			.end(JSON.stringify(<User>response._id));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot get User ID by Username", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get User ID by Username"
+		);
 	}
 };
 
@@ -78,7 +99,7 @@ export const addUser = async (req: Request, res: Response, next: NextFunction) =
 			.status(201)
 			.end(JSON.stringify(response.insertedId));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot add User", ErrorType.GENERAL, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot add User");
 	}
 };
 
@@ -90,7 +111,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 
 		res.setHeader("Content-type", "application/json").status(201).end(JSON.stringify(response.ok));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot delete User", ErrorType.GENERAL, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot delete User");
 	}
 };
 
@@ -109,6 +130,6 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 			.status(201)
 			.end(JSON.stringify(response.value));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot update User", ErrorType.GENERAL, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot update User");
 	}
 };

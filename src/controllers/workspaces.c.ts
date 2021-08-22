@@ -12,7 +12,7 @@ import env from "../env";
 import { ObjectId, Workspace } from "../models";
 import { Collections } from "../types";
 import { FeedbackType, ErrorType } from "../types/commons";
-import { errorHandler } from "../utils";
+import { feedbackHandler } from "../utils";
 
 export const getWorkspaces = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -23,7 +23,14 @@ export const getWorkspaces = async (req: Request, res: Response, next: NextFunct
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400,"Cannot get Workspaces", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get Workspaces"
+		);
 	}
 };
 
@@ -42,11 +49,22 @@ export const getWorkspacesByQuery = async (req: Request, res: Response, next: Ne
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400,"Cannot get Workspaces by Query", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get Workspaces by Query"
+		);
 	}
 };
 
-export const getWorkspacesByCityAndName = async (req: Request, res: Response, next: NextFunction) => {
+export const getWorkspacesByCityAndName = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
 	try {
 		const response: Array<Workspace> = await db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
@@ -58,7 +76,14 @@ export const getWorkspacesByCityAndName = async (req: Request, res: Response, ne
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400,"Cannot get Workspaces by City and Name", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get Workspaces by City and Name"
+		);
 	}
 };
 
@@ -70,7 +95,14 @@ export const getWorkspacesIDByName = async (req: Request, res: Response, next: N
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response._id));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400,"Cannot get Workspaces by ID", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get Workspaces by ID"
+		);
 	}
 };
 
@@ -85,7 +117,14 @@ export const addWorkspace = async (req: Request, res: Response, next: NextFuncti
 			.status(200)
 			.end(JSON.stringify(<ObjectId>response.insertedId));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400,"Cannot add Workspaces", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot add Workspaces"
+		);
 	}
 };
 
@@ -97,7 +136,14 @@ export const deleteWorkspace = async (req: Request, res: Response, next: NextFun
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400,"Cannot delete Workspaces", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot delete Workspaces"
+		);
 	}
 };
 
@@ -115,6 +161,13 @@ export const updateWorkspace = async (req: Request, res: Response, next: NextFun
 			.status(200)
 			.end(JSON.stringify(response.value));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400,"Cannot update Workspaces", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot update Workspaces"
+		);
 	}
 };

@@ -5,7 +5,7 @@ import { Collections } from "../types";
 import { ObjectId, ReturnDocument } from "mongodb";
 import { Space } from "../models";
 import { FeedbackType, ErrorType } from "../types/commons";
-import { errorHandler } from "../utils";
+import { feedbackHandler } from "../utils";
 import { NextFunction } from "connect";
 
 export const getSpace = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,7 +17,7 @@ export const getSpace = async (req: Request, res: Response, next: NextFunction) 
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot get Space", ErrorType.GENERAL, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot get Space");
 	}
 };
 
@@ -32,7 +32,14 @@ export const getSpaceByID = async (req: Request, res: Response, next: NextFuncti
 			.status(200)
 			.end(JSON.stringify(<Space>response));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot get Space by ID", ErrorType.GENERAL, res, next);
+		feedbackHandler(
+			FeedbackType.FAILURE,
+			400,
+			ErrorType.GENERAL,
+			res,
+			next,
+			"Cannot get Space by ID"
+		);
 	}
 };
 
@@ -47,7 +54,7 @@ export const addSpace = async (req: Request, res: Response, next: NextFunction) 
 			.status(200)
 			.end(JSON.stringify(response.insertedId));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot add Space", ErrorType.GENERAL, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot add Space");
 	}
 };
 
@@ -59,7 +66,7 @@ export const deleteSpace = async (req: Request, res: Response, next: NextFunctio
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot delete Space", ErrorType.GENERAL, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot delete Space");
 	}
 };
 
@@ -75,6 +82,6 @@ export const updateSpace = async (req: Request, res: Response, next: NextFunctio
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		errorHandler(FeedbackType.FAILURE, 400, "Cannot update Space", ErrorType.GENERAL, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot update Space");
 	}
 };

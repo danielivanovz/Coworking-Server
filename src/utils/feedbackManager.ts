@@ -1,42 +1,54 @@
 import { NextFunction, response, Response } from "express";
 import { ErrorResponse, ErrorType, FeedbackType } from "../types/commons";
+import statusDescription from "../types/status";
 
 response.customSuccess = function (
 	httpStatusCode: number,
-	type: FeedbackType,
-	statustype: string,
-	message: ErrorResponse["message"],
-	errorType: null
+	message: string,
+	info: string
 ): Response {
-	const data = new Date();
-	return this.status(httpStatusCode).json({ type, statustype, message, data });
+	const date = new Date();
+	return this.status(httpStatusCode).json({ SUCCESS: { INFO: message, info, DATE: date } });
 };
 
 response.customError = function (
 	httpStatusCode: number,
-	type: FeedbackType,
-	statustype: string,
-	message: ErrorResponse["message"],
+	message: string,
 	errorType: ErrorResponse["errorType"]
 ): Response {
-	const data = new Date();
-	return this.status(httpStatusCode).json({type, statustype, message, errorType, data });
+	const date = new Date();
+	return this.status(httpStatusCode).json({
+		FAILURE: { TYPE: errorType, INFO: message, DATE: date },
+	});
 };
 
-import statusList from "../types/status";
-
-export const errorHandler = (
+export const feedbackHandler = (
 	type: FeedbackType,
-	status: number,
-	message: string,
+	httpStatusCode: number,
 	errorType: ErrorType,
 	res: Response,
-	next: NextFunction
+	next: NextFunction,
+	info?: string
 ) => {
+	const column = ": ";
 	switch (type) {
 		case FeedbackType.SUCCESS:
-			return res.customSuccess(status, type, statusList[status], message, errorType);
+			return res.customSuccess(httpStatusCode, `${statusDescription[httpStatusCode]}`, info);
 		case FeedbackType.FAILURE:
-			return res.customError(status, type, statusList[status], message, errorType);
+			return res.customError(
+				httpStatusCode,
+				`${statusDescription[httpStatusCode]}${info === undefined ? "" : column + info}`,
+				errorType
+			);
 	}
 };
+
+// SUCCESS
+//
+// {
+//    		"type": "SUCCESS",
+//     		"statusDescription": "Bad Request",
+//			"message": "Invalid Credentials.",
+// 			"info": "Authentication",
+//    		"data": "2021-08-22T08:12:29.748Z"
+// }

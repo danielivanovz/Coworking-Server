@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import { ErrorType, FeedbackType } from "../types/commons";
-import { errorHandler } from "./feedbackManager";
+import { feedbackHandler } from "./feedbackManager";
 
 export const generateJwtTime = () => {
 	const expirationTime = new Date().getTime() + Number(process.env.EXPIRE_TOKEN) * 10000;
@@ -14,7 +14,6 @@ export const createToken = async (payload: string) => {
 		algorithm: "HS256",
 		expiresIn: generateJwtTime(),
 	});
-
 };
 
 export const extractToken = async (req: Request, res: Response, next: NextFunction) => {
@@ -22,22 +21,27 @@ export const extractToken = async (req: Request, res: Response, next: NextFuncti
 	if (token) {
 		jwt.verify(token, process.env.SECRET_TOKEN, (error, decoded) => {
 			if (error) {
-				errorHandler(FeedbackType.FAILURE, 401, "Token not verified", ErrorType.AUTH, res, next);
+				feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, "Token not verified");
 			} else {
-				errorHandler(FeedbackType.SUCCESS, 200, "Verified Token", null, res, next);
+				feedbackHandler(FeedbackType.SUCCESS, 200, null, res, next, "Verified Token");
 				res.locals.jwt = decoded;
 				next();
 			}
 		});
 	} else {
-		errorHandler(FeedbackType.FAILURE, 401, "Invalid Token", ErrorType.AUTH, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, "Invalid Token");
 	}
 };
 
-export const updateToken = async (token: string, payload: string, res: Response, next: NextFunction) => {
+export const updateToken = async (
+	token: string,
+	payload: string,
+	res: Response,
+	next: NextFunction
+) => {
 	if (token) {
 		return createToken(payload);
 	} else {
-		errorHandler(FeedbackType.FAILURE, 401, "Invalid Token", ErrorType.AUTH, res, next);
+		feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, "Invalid Token");
 	}
 };
