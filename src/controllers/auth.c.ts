@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "../db";
-import env from "../env";
+import { env } from "../config";
 import log from "../logger";
 import { Collections } from "../types";
 import { User } from "../models";

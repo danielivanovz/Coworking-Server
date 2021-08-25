@@ -2,7 +2,7 @@ import { NextFunction } from "connect";
 import { Request, Response } from "express";
 import { ReturnDocument } from "mongodb";
 import { db } from "../db";
-import env from "../env";
+import { env } from "../config";
 import { User, ObjectId } from "../models";
 import { Collections } from "../types";
 import { FeedbackType, ErrorType } from "../types/commons";

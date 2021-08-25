@@ -1,14 +1,8 @@
 import { NextFunction } from "connect";
 import { Request, Response } from "express";
-import {
-	Document,
-	FindOneAndDeleteOptions,
-	InsertOneResult,
-	ModifyResult,
-	ReturnDocument,
-} from "mongodb";
+import { Document, InsertOneResult, ModifyResult, ReturnDocument } from "mongodb";
 import { db } from "../db";
-import env from "../env";
+import { env } from "../config";
 import { ObjectId, Workspace } from "../models";
 import { Collections } from "../types";
 import { FeedbackType, ErrorType } from "../types/commons";

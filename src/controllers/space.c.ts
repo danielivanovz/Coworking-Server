@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { db } from "../db";
-import env from "../env";
+import { env } from "../config";
 import { Collections } from "../types";
 import { ObjectId, ReturnDocument } from "mongodb";
 import { Space } from "../models";

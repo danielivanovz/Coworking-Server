@@ -1,30 +1,36 @@
 import * as dotenv from "dotenv";
-import { Environments, Collections } from "./types";
+import { Collections } from "../types";
 
 dotenv.config();
 
 class Environment {
-	private environment: String;
+	HOST: string;
+	PORT: number;
+	dbUri: string;
+	dbName: string;
+	collection: Collections;
 
-	constructor(environment: String) {
-		this.environment = environment;
+	constructor() {
+		this.dbName = process.env.DB_NAME;
+		this.HOST = "localhost";
+		this.PORT = Number(process.env.PORT) || 8080;
+		this.dbUri = process.env.URI;
 	}
 
 	getPort(): number {
-		if (this.environment === Environments.prod_environment) {
-			return 8080;
-		} else if (this.environment === Environments.dev_environment) {
-			return 8090;
-		} else {
-			return 3000;
-		}
+		return this.PORT;
+	}
+
+	getHost(): string {
+		return this.HOST;
+	}
+
+	getDBName(): string {
+		return this.dbName;
 	}
 
 	getDBUri(): string {
-		return process.env.URI;
-	}
-	getDBName(): string {
-		return process.env.DB_NAME;
+		return this.dbUri;
 	}
 
 	getCollection(collection: Collections): string {
@@ -53,14 +59,6 @@ class Environment {
 				return process.env.WORKSPACE_COLLECTION;
 		}
 	}
-
-	getHost(): string {
-		return "localhost";
-	}
-
-	getCors(): string {
-		return "http://localhost:3000";
-	}
 }
 
-export default new Environment(Environments.dev_environment);
+export const env = new Environment();
