@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import space from "./space.r";
 import users from "./users.r";
 import auth from "./auth.r";
