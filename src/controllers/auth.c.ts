@@ -12,16 +12,16 @@ import { ErrorType, FeedbackType } from "../types/commons";
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const data: User = req.body;
-		const response: Document = await db
+		const { username, password, email }: Pick<User, "username" | "password" | "email"> = req.body;
+		const response = (await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.findOne({ username: data.username });
+			.findOne({ username: username })) as User;
 
-		if (response && (await passwordCompare(data.password, response.password))) {
-			const token = await createToken(data.username);
+		if (response && (await passwordCompare(password, response.password))) {
+			const token = await createToken(username);
 
 			if (token) {
-				res.status(201).send({ id: response.insertedId, token: token });
+				res.status(201).send({ id: response._id, token: token });
 			} else {
 				feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, "Token not created");
 			}
@@ -35,11 +35,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const data: User = req.body;
+		const { username, password, email }: Pick<User, "username" | "password" | "email"> = req.body;
 
 		const response = await db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.findOne({ email: data.email });
+			.findOne({ email: email });
 
 		if (response) {
 			feedbackHandler(
@@ -51,12 +51,13 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 				"User Already Exist. Please Login"
 			);
 		} else {
-			data.password = await passwordHash(data.password);
+			const user: User = req.body;
+			user.password = await passwordHash(password);
 			const response: InsertOneResult<Document> = await db
 				.collection(env.getCollection(Collections.USERS_COLLECTION))
-				.insertOne(data);
+				.insertOne(user);
 
-			const token = await createToken(data.username);
+			const token = await createToken(username);
 			if (token) {
 				res.status(201).send({ id: response.insertedId, token: token });
 			} else {
@@ -66,4 +67,10 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 	} catch (error) {
 		log.error(error);
 	}
+};
+
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		res.clearCookie("token").status(200).send({ message: "Successfully logged out" });
+	} catch (error) {}
 };
