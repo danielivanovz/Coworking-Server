@@ -28,10 +28,10 @@
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.0",
-		"nodemon": "^2.0.12",
 		"prettier": "^2.3.2"
 	},
 	"dependencies": {
+		"nodemon": "^2.0.12",
 		"bcryptjs": "^2.4.3",
 		"cookie-parser": "^1.4.5",
 		"cors": "^2.8.5",
