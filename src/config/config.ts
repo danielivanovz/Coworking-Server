@@ -1,5 +1,5 @@
 import { Application } from "express";
-import { establishConnection } from "../db";
+import { mongo } from "../db";
 import log from "../logger";
 import * as dotenv from "dotenv";
 import { env } from "./env";
@@ -42,7 +42,7 @@ class ServerConfiguration {
 
 	async connectMongo() {
 		try {
-			await establishConnection(this.dbName);
+			await mongo.establishConnection(this.dbName);
 		} catch (error) {
 			log.error("Couldn't establish connection with database");
 		}

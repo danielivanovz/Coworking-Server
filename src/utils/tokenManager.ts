@@ -33,12 +33,7 @@ export const extractToken = async (req: Request, res: Response, next: NextFuncti
 	}
 };
 
-export const updateToken = async (
-	token: string,
-	payload: string,
-	res: Response,
-	next: NextFunction
-) => {
+export const updateToken = async (token: string, payload: string, res: Response, next: NextFunction) => {
 	if (token) {
 		return createToken(payload);
 	} else {

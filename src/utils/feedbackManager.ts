@@ -2,11 +2,7 @@ import { NextFunction, response, Response } from "express";
 import { ErrorResponse, ErrorType, FeedbackType } from "../types/commons";
 import statusDescription from "../types/status";
 
-response.customSuccess = function (
-	httpStatusCode: number,
-	message: string,
-	info: string
-): Response {
+response.customSuccess = function (httpStatusCode: number, message: string, info: string): Response {
 	const date = new Date();
 	return this.status(httpStatusCode).json({ SUCCESS: { INFO: message, info, DATE: date } });
 };

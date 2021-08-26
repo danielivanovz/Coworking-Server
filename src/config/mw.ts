@@ -16,10 +16,7 @@ export default function mw(app: Application) {
 		express.urlencoded({ extended: false }),
 		helmet(),
 		cookieParser(),
-		morgan(
-			serverConfiguration.getMorganOptions().format,
-			serverConfiguration.getMorganOptions().options
-		),
+		morgan(serverConfiguration.getMorganOptions().format, serverConfiguration.getMorganOptions().options),
 		routes
 	);
 

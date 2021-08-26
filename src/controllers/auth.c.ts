@@ -1,33 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import { db } from "../db";
-import { env } from "../config";
 import log from "../logger";
-import { Collections } from "../types";
 import { User } from "../models";
-import { Document, InsertOneResult } from "mongodb";
 import { createToken } from "../utils/tokenManager";
-import { passwordCompare, passwordHash } from "../utils/passwordManager";
+import { passwordHash, userExistsAndPasswordIsTrue } from "../utils/passwordManager";
 import { feedbackHandler } from "../utils";
 import { ErrorType, FeedbackType } from "../types/commons";
+import { fn } from "../db";
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const { username, password, email }: Pick<User, "username" | "password" | "email"> = req.body;
-		const response = (await db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.findOne({ username: username })) as User;
-
-		if (response && (await passwordCompare(password, response.password))) {
-			const token = await createToken(username);
-
-			if (token) {
-				res.status(201).send({ id: response._id, token: token });
-			} else {
-				feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, "Token not created");
-			}
-		} else {
-			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, "Invalid Credentials");
-		}
+		(await userExistsAndPasswordIsTrue(req))
+			? res.status(201).send({ id: req.body._id, token: await createToken(req.body.username) })
+			: feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, "Token not created");
 	} catch (error) {
 		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, "Login Failed");
 	}
@@ -36,34 +20,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { username, password, email }: Pick<User, "username" | "password" | "email"> = req.body;
-
-		const response = await db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.findOne({ email: email });
-
-		if (response) {
-			feedbackHandler(
-				FeedbackType.FAILURE,
-				409,
-				ErrorType.AUTH,
-				res,
-				next,
-				"User Already Exist. Please Login"
-			);
-		} else {
-			const user: User = req.body;
-			user.password = await passwordHash(password);
-			const response: InsertOneResult<Document> = await db
-				.collection(env.getCollection(Collections.USERS_COLLECTION))
-				.insertOne(user);
-
-			const token = await createToken(username);
-			if (token) {
-				res.status(201).send({ id: response.insertedId, token: token });
-			} else {
-				feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, "Token not created");
-			}
-		}
+		(await fn.dbFindOne({ email: email }, req.body as User))
+			? feedbackHandler(FeedbackType.FAILURE, 409, ErrorType.AUTH, res, next, "User Already Exist. Please Login")
+			: (req.body.password = await passwordHash(password));
+		res.status(201).send({ id: (await fn.dbInsertOne(req.body)).insertedId, token: await createToken(username) });
 	} catch (error) {
 		log.error(error);
 	}

@@ -1,7 +1,7 @@
 import { NextFunction } from "connect";
 import { Request, Response } from "express";
 import { ReturnDocument } from "mongodb";
-import { db } from "../db";
+import { mongo } from "../db";
 import { env } from "../config";
 import { User, ObjectId } from "../models";
 import { Collections } from "../types";
@@ -10,7 +10,7 @@ import { feedbackHandler } from "../utils";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response: Array<User> = await db
+		const response: Array<User> = await mongo.db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.find()
 			.toArray();
@@ -23,7 +23,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 export const getUserByID = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = await db
+		const response = await mongo.db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.findOne(new ObjectId(<string>req.query.id));
 
@@ -32,21 +32,14 @@ export const getUserByID = async (req: Request, res: Response, next: NextFunctio
 			.status(200)
 			.end(JSON.stringify(<User>response));
 	} catch (error) {
-		feedbackHandler(
-			FeedbackType.FAILURE,
-			400,
-			ErrorType.GENERAL,
-			res,
-			next,
-			"Cannot get User by ID"
-		);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot get User by ID");
 	}
 };
 
 export const getUserWithQuery = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase();
-		const response: Array<User> = await db
+		const response: Array<User> = await mongo.db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.find({
 				[fieldQuery]: <string>req.query[fieldQuery],
@@ -55,20 +48,13 @@ export const getUserWithQuery = async (req: Request, res: Response, next: NextFu
 
 		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
 	} catch (error) {
-		feedbackHandler(
-			FeedbackType.FAILURE,
-			400,
-			ErrorType.GENERAL,
-			res,
-			next,
-			"Cannot get User with Query"
-		);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot get User with Query");
 	}
 };
 
 export const getUserIDbyUsername = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = await db
+		const response = await mongo.db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.findOne({ username: req.params.username });
 
@@ -77,27 +63,15 @@ export const getUserIDbyUsername = async (req: Request, res: Response, next: Nex
 			.status(200)
 			.end(JSON.stringify(<User>response._id));
 	} catch (error) {
-		feedbackHandler(
-			FeedbackType.FAILURE,
-			400,
-			ErrorType.GENERAL,
-			res,
-			next,
-			"Cannot get User ID by Username"
-		);
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot get User ID by Username");
 	}
 };
 
 export const addUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = await db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.insertOne(req.body);
+		const response = await mongo.db.collection(env.getCollection(Collections.USERS_COLLECTION)).insertOne(req.body);
 
-		res
-			.setHeader("Content-type", "application/json")
-			.status(201)
-			.end(JSON.stringify(response.insertedId));
+		res.setHeader("Content-type", "application/json").status(201).end(JSON.stringify(response.insertedId));
 	} catch (error) {
 		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot add User");
 	}
@@ -105,7 +79,7 @@ export const addUser = async (req: Request, res: Response, next: NextFunction) =
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = await db
+		const response = await mongo.db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.findOneAndDelete({ _id: new ObjectId(<string>req.body.id) });
 
@@ -117,7 +91,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = await db
+		const response = await mongo.db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.findOneAndUpdate(
 				{ _id: new ObjectId(<string>req.body.id) },
@@ -125,10 +99,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 				{ returnDocument: ReturnDocument.AFTER, projection: { _id: 0 } }
 			);
 
-		res
-			.setHeader("Content-type", "application/json")
-			.status(201)
-			.end(JSON.stringify(response.value));
+		res.setHeader("Content-type", "application/json").status(201).end(JSON.stringify(response.value));
 	} catch (error) {
 		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot update User");
 	}
