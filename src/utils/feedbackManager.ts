@@ -1,6 +1,6 @@
-import { NextFunction, response, Response } from "express";
-import { ErrorResponse, ErrorType, FeedbackType } from "../types/commons";
-import statusDescription from "../types/status";
+import { NextFunction, response, Response } from 'express';
+import { ErrorResponse, ErrorType, FeedbackType } from '../types/commons';
+import statusDescription from '../types/status';
 
 response.customSuccess = function (httpStatusCode: number, message: string, info: string): Response {
 	const date = new Date();
@@ -10,7 +10,7 @@ response.customSuccess = function (httpStatusCode: number, message: string, info
 response.customError = function (
 	httpStatusCode: number,
 	message: string,
-	errorType: ErrorResponse["errorType"]
+	errorType: ErrorResponse['errorType']
 ): Response {
 	const date = new Date();
 	return this.status(httpStatusCode).json({
@@ -26,14 +26,14 @@ export const feedbackHandler = (
 	next: NextFunction,
 	info?: string
 ) => {
-	const column = ": ";
+	const column = ': ';
 	switch (type) {
 		case FeedbackType.SUCCESS:
 			return res.customSuccess(httpStatusCode, `${statusDescription[httpStatusCode]}`, info);
 		case FeedbackType.FAILURE:
 			return res.customError(
 				httpStatusCode,
-				`${statusDescription[httpStatusCode]}${info === undefined ? "" : column + info}`,
+				`${statusDescription[httpStatusCode]}${info === undefined ? '' : column + info}`,
 				errorType
 			);
 	}

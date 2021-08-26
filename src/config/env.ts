@@ -1,5 +1,5 @@
-import * as dotenv from "dotenv";
-import { Collections } from "../types";
+import * as dotenv from 'dotenv';
+import { Collections } from '../types';
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ class Environment {
 
 	constructor() {
 		this.dbName = process.env.DB_NAME;
-		this.HOST = "localhost";
+		this.HOST = 'localhost';
 		this.PORT = Number(process.env.PORT) || 8080;
 		this.dbUri = process.env.URI;
 	}

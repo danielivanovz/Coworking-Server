@@ -1,5 +1,5 @@
-import { ObjectId } from ".";
-import { Reservation, WorkspaceType } from "../types/commons";
+import { ObjectId } from '.';
+import { Reservation, WorkspaceType } from '../types/commons';
 
 export interface Space {
 	_id: ObjectId;

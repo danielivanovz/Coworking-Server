@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { mongo } from "../db";
-import { env } from "../config";
-import { Collections } from "../types";
-import { ObjectId, ReturnDocument } from "mongodb";
-import { Space } from "../models";
-import { FeedbackType, ErrorType } from "../types/commons";
-import { feedbackHandler } from "../utils";
-import { NextFunction } from "connect";
+import { Request, Response } from 'express';
+import { mongo } from '../db';
+import { env } from '../config';
+import { Collections } from '../types';
+import { ObjectId, ReturnDocument } from 'mongodb';
+import { Space } from '../models';
+import { FeedbackType, ErrorType } from '../types/commons';
+import { feedbackHandler } from '../utils';
+import { NextFunction } from 'connect';
 
 export const getSpace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -15,9 +15,9 @@ export const getSpace = async (req: Request, res: Response, next: NextFunction) 
 			.find()
 			.toArray();
 
-		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response));
+		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response));
 	} catch (error) {
-		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot get Space");
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get Space');
 	}
 };
 
@@ -28,11 +28,11 @@ export const getSpaceByID = async (req: Request, res: Response, next: NextFuncti
 			.findOne(new ObjectId(<string>req.query.id));
 
 		res
-			.setHeader("Content-type", "application/json")
+			.setHeader('Content-type', 'application/json')
 			.status(200)
 			.end(JSON.stringify(<Space>response));
 	} catch (error) {
-		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot get Space by ID");
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get Space by ID');
 	}
 };
 
@@ -40,9 +40,9 @@ export const addSpace = async (req: Request, res: Response, next: NextFunction) 
 	try {
 		const response = await mongo.db.collection(env.getCollection(Collections.SPACE_COLLECTION)).insertOne(req.body);
 
-		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.insertedId));
+		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response.insertedId));
 	} catch (error) {
-		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot add Space");
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot add Space');
 	}
 };
 
@@ -52,9 +52,9 @@ export const deleteSpace = async (req: Request, res: Response, next: NextFunctio
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
 			.findOneAndDelete({ _id: new ObjectId(<string>req.body.id) });
 
-		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
+		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot delete Space");
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot delete Space');
 	}
 };
 
@@ -68,8 +68,8 @@ export const updateSpace = async (req: Request, res: Response, next: NextFunctio
 				{ returnDocument: ReturnDocument.AFTER, projection: { _id: 0 } }
 			);
 
-		res.setHeader("Content-type", "application/json").status(200).end(JSON.stringify(response.ok));
+		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response.ok));
 	} catch (error) {
-		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Cannot update Space");
+		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot update Space');
 	}
 };

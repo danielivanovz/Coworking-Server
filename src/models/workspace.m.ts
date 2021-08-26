@@ -1,4 +1,4 @@
-import { Review, Space, ObjectId, Course, Partner } from ".";
+import { Review, Space, ObjectId, Course, Partner } from '.';
 
 export interface Workspace {
 	_id?: ObjectId;

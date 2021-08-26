@@ -1,4 +1,4 @@
-import * as config from "./config";
+import * as config from './config';
 
 export const MongoOptions: config.MongoOptions = {
 	useUnifiedTopology: true,
@@ -8,36 +8,36 @@ export const MongoOptions: config.MongoOptions = {
 export const Root: config.API = {
 	statusCode: 200,
 	availableAPIs: [
-		"/v1",
+		'/v1',
 		{
-			"/api": "root",
-			"/*": "404",
-			"/auth": {
-				"/login": "POST login",
-				"/signup": "POST register",
+			'/api': 'root',
+			'/*': '404',
+			'/auth': {
+				'/login': 'POST login',
+				'/signup': 'POST register',
 			},
-			"/user": {
-				"/": "GET, POST, PUT, DELETE user",
-				"/retrieve": "GET User By ID",
-				"/:query": "GET User By Field",
+			'/user': {
+				'/': 'GET, POST, PUT, DELETE user',
+				'/retrieve': 'GET User By ID',
+				'/:query': 'GET User By Field',
 			},
-			"/workspace": {
-				"/": "GET, POST, PUT, DELETE workspace",
-				"/retrieve": "GET workspace By ID",
-				"/:query": "GET workspace By Field",
-				"/:location/:name": "GET workspace By location AND name",
+			'/workspace': {
+				'/': 'GET, POST, PUT, DELETE workspace',
+				'/retrieve': 'GET workspace By ID',
+				'/:query': 'GET workspace By Field',
+				'/:location/:name': 'GET workspace By location AND name',
 			},
-			"/space": {
-				"/": "GET, POST, PUT, DELETE space",
-				"/retrieve": "GET space By ID",
+			'/space': {
+				'/': 'GET, POST, PUT, DELETE space',
+				'/retrieve': 'GET space By ID',
 			},
 		},
 	],
 };
 
 export enum Environments {
-	dev_environment = "string",
-	prod_environment = "prod",
+	dev_environment = 'string',
+	prod_environment = 'prod',
 }
 
 export enum Collections {

@@ -1,5 +1,5 @@
-import { Document } from "mongodb";
-import { ObjectId } from ".";
+import { Document } from 'mongodb';
+import { ObjectId } from '.';
 
 export interface User {
 	_id?: ObjectId;
@@ -15,7 +15,7 @@ export interface User {
 	email: string;
 	num: number;
 	age: number;
-	gender?: "male" | "female" | null;
+	gender?: 'male' | 'female' | null;
 	username: string;
 	password: string;
 	title: string;

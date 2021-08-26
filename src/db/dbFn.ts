@@ -1,7 +1,7 @@
-import { InsertOneResult } from "mongodb";
-import { env } from "../config";
-import { Collections } from "../types";
-import { mongo } from ".";
+import { InsertOneResult } from 'mongodb';
+import { env } from '../config';
+import { Collections } from '../types';
+import { mongo } from '.';
 
 export const dbFindOne = async <T>(query: object, type: T) => {
 	return (await mongo.db

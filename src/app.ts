@@ -1,5 +1,5 @@
-import { serverConfiguration } from "./config/config";
-import { createServer } from "./config";
+import { serverConfiguration } from './config/config';
+import { createServer } from './config';
 
 const startServer = async () => {
 	serverConfiguration.startServer(createServer());

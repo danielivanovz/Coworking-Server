@@ -1,3 +1,3 @@
-import log from "./logger";
+import log from './logger';
 
 export default log;

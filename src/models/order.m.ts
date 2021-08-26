@@ -1,4 +1,4 @@
-import { ObjectId } from ".";
+import { ObjectId } from '.';
 
 export interface Order {
 	id?: ObjectId;
