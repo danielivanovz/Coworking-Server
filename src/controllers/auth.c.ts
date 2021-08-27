@@ -20,10 +20,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { username, email }: Pick<User, 'username' | 'email'> = req.body
-		;(await fn.dbFindOne({ email: email }, req.body as User))
+		;(await fn.dbFindOneUser({ email: email }, req.body as User))
 			? feedbackHandler(FeedbackType.FAILURE, 409, ErrorType.AUTH, res, next, 'User Already Exist. Please Login')
 			: await passwordHasher(req)
-		res.status(201).send({ id: (await fn.dbInsertOne(req.body)).insertedId, token: await createToken(username) })
+		res.status(201).send({ id: (await fn.dbInserOneUser(req.body)).insertedId, token: await createToken(username) })
 	} catch (error) {
 		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, 'Failed signing up. Please try again.')
 	}

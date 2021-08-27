@@ -5,16 +5,19 @@ import morgan from 'morgan'
 import routes from '../routes'
 import cookieParser from 'cookie-parser'
 import { ServerConfiguration } from '.'
-import { IApplication } from '../types/config'
-
+import { IApplication, MorganConfiguraton } from '../types/config'
+import { log } from '../utils'
 export class Middleware extends ServerConfiguration implements IApplication {
 	app: Application
-	config: ServerConfiguration
+	config: ServerConfiguration = new ServerConfiguration()
+	morganOptions: MorganConfiguraton = {
+		format: ':method :url :status :res[content-length] - :response-time ms',
+		options: { stream: { write: (message: string) => log.info(message) } }
+	}
 
 	constructor(app: Application) {
 		super()
 
-		this.config = new ServerConfiguration()
 		this.app = app
 		this.setCors()
 		this.setJSON()
@@ -47,11 +50,11 @@ export class Middleware extends ServerConfiguration implements IApplication {
 	}
 
 	setMorgan() {
-		this.app.use(morgan(this.config.morganOptions.format, this.config.morganOptions.options))
+		this.app.use(morgan(this.morganOptions.format, this.morganOptions.options))
 	}
 
 	setTokenHandler() {
-		this.app.use(this.config.tokenHandler)
+		this.app.use(this.tokenHandler)
 	}
 
 	setRoutes() {

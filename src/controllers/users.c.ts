@@ -1,7 +1,7 @@
 import { NextFunction } from 'connect'
 import { Request, Response } from 'express'
 import { ReturnDocument } from 'mongodb'
-import { mongo } from '../db'
+import { mongo } from '../db/db'
 import { env } from '../config'
 import { User, ObjectId } from '../models'
 import { Collections } from '../types'

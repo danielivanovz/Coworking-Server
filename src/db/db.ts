@@ -1,22 +1,41 @@
-import { MongoClient, Db } from 'mongodb'
-import { env } from '../config'
-import { MongoOptions } from '../types'
+import { MongoClient, Db, MongoDBNamespace, Collection } from 'mongodb'
+import { ServerConfiguration } from '../config'
 import { log } from '../utils'
 
-const mongoURI: string = env.getDBUri()
+class MongoConnection extends ServerConfiguration {
+	client: MongoClient
+	db: Db
+	dbCollection: Collection
 
-export const establishConnection = async (dbName: string) => {
-	const client = new MongoClient(mongoURI, MongoOptions)
-	try {
-		const connected = await client
-			.connect()
-			.finally(() => log.info('Connection to the database established - status: ' + client['topology'].s.state))
-
-		db = connected.db(dbName)
-	} catch (error) {
-		log.error
+	constructor() {
+		super()
+		this.client = new MongoClient(this.dbUri, this.mongoOptions)
+		this.setDb()
 	}
-	return client
+
+	async establishConnection() {
+		try {
+			return await this.client
+				.connect()
+				.finally(() => log.info('Connection to the database established - status: ' + this.client['topology'].s.state))
+		} catch (error) {
+			log.info('Error connecting to MongoDB Database')
+		}
+	}
+
+	setDb() {
+		try {
+			this.db = this.client.db(this.dbName)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	setCollection(collection: string) {
+		try {
+			this.dbCollection = this.db.collection(collection)
+		} catch (error) {}
+	}
 }
 
-export let db: Db
+export const mongo = new MongoConnection()

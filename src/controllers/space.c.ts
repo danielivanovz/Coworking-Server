@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { mongo } from '../db'
 import { env } from '../config'
 import { Collections } from '../types'
 import { ObjectId, ReturnDocument } from 'mongodb'
@@ -7,6 +6,7 @@ import { Space } from '../models'
 import { FeedbackType, ErrorType } from '../types/commons'
 import { feedbackHandler } from '../utils'
 import { NextFunction } from 'connect'
+import { mongo } from '../db/db'
 
 export const getSpace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -14,6 +14,8 @@ export const getSpace = async (req: Request, res: Response, next: NextFunction) 
 			.collection(env.getCollection(Collections.SPACE_COLLECTION))
 			.find()
 			.toArray()) as Space[]
+
+		mongo.db
 
 		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 	} catch (error) {
