@@ -4,7 +4,7 @@ export enum WorkspaceType {
 	'desktop',
 	'office',
 	'meeting',
-	'event',
+	'event'
 }
 
 export interface Reservation {
@@ -15,7 +15,7 @@ export interface Reservation {
 
 export enum ErrorType {
 	GENERAL = 'General',
-	AUTH = 'Authentication',
+	AUTH = 'Authentication'
 }
 
 export interface ErrorResponse {
@@ -32,5 +32,5 @@ export interface Feedback {
 
 export enum FeedbackType {
 	SUCCESS = 'SUCCESS',
-	FAILURE = 'FAILURE',
+	FAILURE = 'FAILURE'
 }

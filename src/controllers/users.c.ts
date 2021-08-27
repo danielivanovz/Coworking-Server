@@ -42,7 +42,7 @@ export const getUserWithQuery = async (req: Request, res: Response, next: NextFu
 		const response = (await mongo.db
 			.collection(env.getCollection(Collections.USERS_COLLECTION))
 			.find({
-				[fieldQuery]: <string>req.query[fieldQuery],
+				[fieldQuery]: <string>req.query[fieldQuery]
 			})
 			.toArray()) as User[]
 

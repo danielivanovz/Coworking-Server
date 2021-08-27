@@ -28,7 +28,7 @@ export const getWorkspacesByQuery = async (req: Request, res: Response, next: Ne
 		const response = (await mongo.db
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
 			.find({
-				[fieldQuery]: <string>req.query[fieldQuery],
+				[fieldQuery]: <string>req.query[fieldQuery]
 			})
 			.toArray()) as Workspace[]
 
@@ -46,7 +46,7 @@ export const getWorkspacesByCityAndName = async (req: Request, res: Response, ne
 			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
 			.find({
 				'address.city': req.params.city.toLowerCase(),
-				name: req.params.name.toLowerCase(),
+				name: req.params.name.toLowerCase()
 			})
 			.toArray()) as Workspace[]
 
