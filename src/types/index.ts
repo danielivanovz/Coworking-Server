@@ -1,9 +1,9 @@
-import * as config from './config';
+import * as config from './config'
 
 export const MongoOptions: config.MongoOptions = {
 	useUnifiedTopology: true,
 	ignoreUndefined: true,
-};
+}
 
 export const Root: config.API = {
 	statusCode: 200,
@@ -33,7 +33,7 @@ export const Root: config.API = {
 			},
 		},
 	],
-};
+}
 
 export enum Environments {
 	dev_environment = 'string',
@@ -52,11 +52,3 @@ export enum Collections {
 	USERS_COLLECTION,
 	WORKSPACE_COLLECTION,
 }
-
-// `*/`,
-// `/workspace/:location`,
-// `/workspace/:location/:name`,
-// `/workspace-id/:name`,
-// `/users`,
-// `/user/:query`,
-// `/user-id/:username`,

@@ -1,4 +1,4 @@
-import { Order } from '../models/order.m';
+import { Order } from '../models/order.m'
 
 export enum WorkspaceType {
 	'desktop',
@@ -8,9 +8,9 @@ export enum WorkspaceType {
 }
 
 export interface Reservation {
-	start: string;
-	end: string;
-	order_id: Order['id'];
+	start: string
+	end: string
+	order_id: Order['id']
 }
 
 export enum ErrorType {
@@ -19,15 +19,15 @@ export enum ErrorType {
 }
 
 export interface ErrorResponse {
-	errorType: ErrorType;
-	message: string;
+	errorType: ErrorType
+	message: string
 }
 
 export interface Feedback {
-	httpStatusCode: number;
-	message: ErrorResponse['message'];
-	type: ErrorResponse['errorType'];
-	data?: any;
+	httpStatusCode: number
+	message: ErrorResponse['message']
+	type: ErrorResponse['errorType']
+	data?: any
 }
 
 export enum FeedbackType {

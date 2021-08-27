@@ -1,2 +1,2 @@
-export * as mongo from './db';
-export * as fn from './dbFn';
+export * as mongo from './db'
+export * as fn from './dbFn'

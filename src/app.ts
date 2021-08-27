@@ -1,9 +1,4 @@
-import { serverConfiguration } from './config/config';
-import { createServer } from './config';
+import express from 'express'
+import { Server } from './config/server'
 
-const startServer = async () => {
-	serverConfiguration.startServer(createServer());
-	await serverConfiguration.connectMongo();
-};
-
-startServer();
+new Server(express())

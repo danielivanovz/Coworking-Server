@@ -1,22 +1,22 @@
-import { MongoClient, Db } from 'mongodb';
-import { env } from '../config';
-import log from '../logger';
-import { MongoOptions } from '../types';
+import { MongoClient, Db } from 'mongodb'
+import { env } from '../config'
+import { MongoOptions } from '../types'
+import { log } from '../utils'
 
-const mongoURI: string = env.getDBUri();
+const mongoURI: string = env.getDBUri()
 
 export const establishConnection = async (dbName: string) => {
-	const client = new MongoClient(mongoURI, MongoOptions);
+	const client = new MongoClient(mongoURI, MongoOptions)
 	try {
 		const connected = await client
 			.connect()
-			.finally(() => log.info('Connection to the database established - status: ' + client['topology'].s.state));
+			.finally(() => log.info('Connection to the database established - status: ' + client['topology'].s.state))
 
-		db = connected.db(dbName);
+		db = connected.db(dbName)
 	} catch (error) {
-		log.error;
+		log.error
 	}
-	return client;
-};
+	return client
+}
 
-export let db: Db;
+export let db: Db

@@ -1,14 +1,14 @@
-import { Router } from 'express';
+import { Router } from 'express'
 
-import * as spaceController from '../../controllers/space.c';
+import * as spaceController from '../../controllers/space.c'
 
-const router = Router();
+const router = Router()
 
-router.get('/', spaceController.getSpace);
-router.post('/', spaceController.addSpace);
-router.put('/', spaceController.updateSpace);
-router.delete('/', spaceController.deleteSpace);
+router.get('/', spaceController.getSpace)
+router.post('/', spaceController.addSpace)
+router.put('/', spaceController.updateSpace)
+router.delete('/', spaceController.deleteSpace)
 
-router.get('/retrieve', spaceController.getSpaceByID);
+router.get('/retrieve', spaceController.getSpaceByID)
 
-export default router;
+export default router
