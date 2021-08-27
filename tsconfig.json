@@ -8,6 +8,6 @@
 		"moduleResolution": "node",
 		"esModuleInterop": true
 	},
-	"exclude": ["node_modules"],
+	"exclude": ["node_modules", "src/**/*.spec.ts"],
 	"include": ["./src/**/*.tsx", "./src/**/*.ts"]
 }
