@@ -4,8 +4,7 @@ import { createToken } from '../utils/tokenManager'
 import { passwordHasher, userExistsAndPasswordIsTrue } from '../utils/passwordManager'
 import { feedbackHandler } from '../utils'
 import { ErrorType, FeedbackType } from '../types/commons'
-import { fn } from '../db'
-import jwt from 'jsonwebtoken'
+import { mongo } from '../db/db'
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -20,10 +19,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { username, email }: Pick<User, 'username' | 'email'> = req.body
-		;(await fn.dbFindOneUser({ email: email }, req.body as User))
+		;(await mongo.findOneUser({ email: email }, req.body as User))
 			? feedbackHandler(FeedbackType.FAILURE, 409, ErrorType.AUTH, res, next, 'User Already Exist. Please Login')
 			: await passwordHasher(req)
-		res.status(201).send({ id: (await fn.dbInserOneUser(req.body)).insertedId, token: await createToken(username) })
+		res.status(201).send({ id: (await mongo.inserOneUser(req.body)).insertedId, token: await createToken(username) })
 	} catch (error) {
 		feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, 'Failed signing up. Please try again.')
 	}

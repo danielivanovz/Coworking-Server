@@ -1,5 +1,4 @@
 import { Application, Request, Response, NextFunction } from 'express'
-import { mongo } from '../db'
 import { Environment } from './env'
 import { feedbackHandler, log } from '../utils'
 import { ErrorType, FeedbackType } from '../types/commons'

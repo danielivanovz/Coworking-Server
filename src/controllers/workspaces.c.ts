@@ -2,18 +2,14 @@ import { NextFunction } from 'connect'
 import { Request, Response } from 'express'
 import { Document, InsertOneResult, ModifyResult, ReturnDocument } from 'mongodb'
 import { mongo } from '../db/db'
-import { env } from '../config'
 import { ObjectId, Workspace } from '../models'
-import { Collections } from '../types'
+import { C, choose } from '../types'
 import { FeedbackType, ErrorType } from '../types/commons'
 import { feedbackHandler } from '../utils'
 
 export const getWorkspaces = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = (await mongo.db
-			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
-			.find()
-			.toArray()) as Workspace[]
+		const response = (await mongo.db.collection(choose<string>('WORKSPACE', C)).find().toArray()) as Workspace[]
 
 		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 	} catch (error) {
@@ -26,7 +22,7 @@ export const getWorkspacesByQuery = async (req: Request, res: Response, next: Ne
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase()
 
 		const response = (await mongo.db
-			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
+			.collection(choose<string>('WORKSPACE', C))
 			.find({
 				[fieldQuery]: <string>req.query[fieldQuery]
 			})
@@ -43,7 +39,7 @@ export const getWorkspacesByQuery = async (req: Request, res: Response, next: Ne
 export const getWorkspacesByCityAndName = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = (await mongo.db
-			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
+			.collection(choose<string>('WORKSPACE', C))
 			.find({
 				'address.city': req.params.city.toLowerCase(),
 				name: req.params.name.toLowerCase()
@@ -59,7 +55,7 @@ export const getWorkspacesByCityAndName = async (req: Request, res: Response, ne
 export const getWorkspacesIDByName = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: Document = await mongo.db
-			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
+			.collection(choose<string>('WORKSPACE', C))
 			.findOne({ name: { $regex: <string>req.params.name } })
 
 		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response._id))
@@ -71,7 +67,7 @@ export const getWorkspacesIDByName = async (req: Request, res: Response, next: N
 export const addWorkspace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: InsertOneResult<Workspace> = await mongo.db
-			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
+			.collection(choose<string>('WORKSPACE', C))
 			.insertOne(req.body)
 
 		res
@@ -86,7 +82,7 @@ export const addWorkspace = async (req: Request, res: Response, next: NextFuncti
 export const deleteWorkspace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: ModifyResult<Document> = await mongo.db
-			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
+			.collection(choose<string>('WORKSPACE', C))
 			.findOneAndDelete({ _id: new ObjectId(<string>req.body.id) })
 
 		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response.ok))
@@ -98,7 +94,7 @@ export const deleteWorkspace = async (req: Request, res: Response, next: NextFun
 export const updateWorkspace = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response: ModifyResult<Document> = await mongo.db
-			.collection(env.getCollection(Collections.WORKSPACE_COLLECTION))
+			.collection(choose<string>('WORKSPACE', C))
 			.findOneAndUpdate(
 				{ _id: new ObjectId(<string>req.body.id) },
 				{ $set: req.body },

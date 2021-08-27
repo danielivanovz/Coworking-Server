@@ -39,16 +39,23 @@ export enum Environments {
 	dev_environment = 'string',
 	prod_environment = 'prod'
 }
+export interface Cases<T> {
+	[key: string]: () => T
+}
 
-export enum Collections {
-	BILLING_USER_COLLECTION,
-	BILLING_WORKSPACE_COLLECTION,
-	COURSES_COLLECTION,
-	INVOICE_COLLECTION,
-	ORDER_COLLECTION,
-	PARTNER_COLLECTION,
-	REVIEW_COLLECTION,
-	SPACE_COLLECTION,
-	USERS_COLLECTION,
-	WORKSPACE_COLLECTION
+export const C: Cases<string> = {
+	BILLING_USER: () => `${process.env.BILLING_USER_COLLECTION}`,
+	BILLING_WS: () => `${process.env.BILLING_WORKSPACE_COLLECTION}`,
+	COURSES: () => `${process.env.COURSES_COLLECTION}`,
+	INVOICE: () => `${process.env.INVOICE_COLLECTION}`,
+	ORDER: () => `${process.env.ORDER_COLLECTION}`,
+	PARTNER: () => `${process.env.PARTNER_COLLECTION}`,
+	REVIEW: () => `${process.env.REVIEW_COLLECTION}`,
+	SPACE: () => `${process.env.SPACE_COLLECTION}`,
+	USERS: () => `${process.env.USERS_COLLECTION}`,
+	WORKSPACE: () => `${process.env.WORKSPACE_COLLECTION}`
+}
+
+export function choose<T>(input: string, cases: Cases<T>): T {
+	return cases[input]()
 }

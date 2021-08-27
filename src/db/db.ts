@@ -1,11 +1,12 @@
-import { MongoClient, Db, MongoDBNamespace, Collection } from 'mongodb'
+import { MongoClient, Db, Collection, InsertOneResult } from 'mongodb'
 import { ServerConfiguration } from '../config'
+import { C, choose } from '../types'
 import { log } from '../utils'
 
 class MongoConnection extends ServerConfiguration {
 	client: MongoClient
 	db: Db
-	dbCollection: Collection
+	collection: Collection
 
 	constructor() {
 		super()
@@ -31,10 +32,12 @@ class MongoConnection extends ServerConfiguration {
 		}
 	}
 
-	setCollection(collection: string) {
-		try {
-			this.dbCollection = this.db.collection(collection)
-		} catch (error) {}
+	async findOneUser<T>(query: object, type: T) {
+		return (await mongo.db.collection(choose<string>('USERS', C)).findOne(query)) as unknown as typeof type
+	}
+
+	async inserOneUser(query: object) {
+		return (await mongo.db.collection(choose<string>('USERS', C)).insertOne(query)) as InsertOneResult<Document>
 	}
 }
 

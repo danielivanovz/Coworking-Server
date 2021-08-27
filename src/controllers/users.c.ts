@@ -2,18 +2,14 @@ import { NextFunction } from 'connect'
 import { Request, Response } from 'express'
 import { ReturnDocument } from 'mongodb'
 import { mongo } from '../db/db'
-import { env } from '../config'
 import { User, ObjectId } from '../models'
-import { Collections } from '../types'
+import { C, choose } from '../types'
 import { FeedbackType, ErrorType } from '../types/commons'
 import { feedbackHandler } from '../utils'
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = (await mongo.db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.find()
-			.toArray()) as User[]
+		const response = (await mongo.db.collection(choose<string>('USERS', C)).find().toArray()) as User[]
 
 		res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 	} catch (error) {
@@ -23,9 +19,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 export const getUserByID = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = await mongo.db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.findOne(new ObjectId(<string>req.query.id))
+		const response = await mongo.db.collection(choose<string>('USERS', C)).findOne(new ObjectId(<string>req.query.id))
 
 		res
 			.setHeader('Content-type', 'application/json')
@@ -40,7 +34,7 @@ export const getUserWithQuery = async (req: Request, res: Response, next: NextFu
 	try {
 		const fieldQuery: string = Object.keys(req.query).toString().toLowerCase()
 		const response = (await mongo.db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
+			.collection(choose<string>('USERS', C))
 			.find({
 				[fieldQuery]: <string>req.query[fieldQuery]
 			})
@@ -54,9 +48,7 @@ export const getUserWithQuery = async (req: Request, res: Response, next: NextFu
 
 export const getUserIDbyUsername = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = await mongo.db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
-			.findOne({ username: req.params.username })
+		const response = await mongo.db.collection(choose<string>('USERS', C)).findOne({ username: req.params.username })
 
 		res
 			.setHeader('Content-type', 'application/json')
@@ -69,7 +61,7 @@ export const getUserIDbyUsername = async (req: Request, res: Response, next: Nex
 
 export const addUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const response = await mongo.db.collection(env.getCollection(Collections.USERS_COLLECTION)).insertOne(req.body)
+		const response = await mongo.db.collection(choose<string>('USERS', C)).insertOne(req.body)
 
 		res.setHeader('Content-type', 'application/json').status(201).end(JSON.stringify(response.insertedId))
 	} catch (error) {
@@ -80,7 +72,7 @@ export const addUser = async (req: Request, res: Response, next: NextFunction) =
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await mongo.db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
+			.collection(choose<string>('USERS', C))
 			.findOneAndDelete({ _id: new ObjectId(<string>req.body.id) })
 
 		res.setHeader('Content-type', 'application/json').status(201).end(JSON.stringify(response.ok))
@@ -92,7 +84,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const response = await mongo.db
-			.collection(env.getCollection(Collections.USERS_COLLECTION))
+			.collection(choose<string>('USERS', C))
 			.findOneAndUpdate(
 				{ _id: new ObjectId(<string>req.body.id) },
 				{ $set: req.body },

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { Request } from 'express'
-import { fn } from '../db'
+import { mongo } from '../db/db'
 import { User } from '../models'
 
 export const passwordHash = async (input: string): Promise<string> => {
@@ -13,7 +13,7 @@ export const passwordCompare = async (input: string, password: string): Promise<
 
 export const userExistsAndPasswordIsTrue = async (req: Request) => {
 	const { username, password } = req.body as Pick<User, 'username' | 'password'>
-	const response = (await fn.dbFindOneUser({ username: username }, req.body)) as unknown as User
+	const response = (await mongo.findOneUser({ username: username }, req.body)) as unknown as User
 	return response && (await passwordCompare(password, response.password))
 }
 
