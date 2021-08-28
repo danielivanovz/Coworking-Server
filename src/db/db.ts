@@ -37,12 +37,12 @@ export class MongoConnection extends Environment {
 		}
 	}
 
-	async findOneUser<T>(query: object, type: T) {
-		return (await mongo.db.collection(choose<string>('USERS', C)).findOne(query)) as unknown as typeof type
+	async findOne<T>(query: object, collection: string, type?: T) {
+		return (await mongo.db.collection(choose<string>(collection, C)).findOne(query)) as unknown as typeof type
 	}
 
-	async inserOneUser(query: object) {
-		return (await mongo.db.collection(choose<string>('USERS', C)).insertOne(query)) as InsertOneResult<Document>
+	async insertOne<T>(query: object, collection: string, type?: T) {
+		return (await mongo.db.collection(choose<string>(collection, C)).insertOne(query)) as InsertOneResult<Document>
 	}
 }
 

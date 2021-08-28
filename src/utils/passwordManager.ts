@@ -9,7 +9,7 @@ export const passwordCompare = async (input: string, password: string): Promise<
 
 export const userExistsAndPasswordIsTrue = async (req: Request) => {
 	const { username, password } = req.body as Pick<User, 'username' | 'password'>
-	const response = (await mongo.findOneUser({ username: username }, req.body)) as unknown as User
+	const response = (await mongo.findOne({ username: username }, 'USERS', req.body)) as unknown as User
 	return response && (await passwordCompare(password, response.password))
 }
 
