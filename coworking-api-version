@@ -13,6 +13,7 @@ paths:
       responses:
         "200":
           description: OK
+        body: #/components/schemas/User
     post:
       tags:
         - User
