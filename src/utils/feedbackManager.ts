@@ -14,7 +14,7 @@ response.customError = function (
 ): Response {
 	const date = new Date()
 	return this.status(httpStatusCode).json({
-		FAILURE: { TYPE: errorType, INFO: message, DATE: date }
+		FAILURE: { TYPE: errorType, INFO: message, DATE: date },
 	})
 }
 

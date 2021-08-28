@@ -12,7 +12,7 @@ export const createToken = async (payload: string) => {
 	return jwt.sign({ username: payload }, process.env.SECRET_TOKEN, {
 		issuer: process.env.ISSUER_TOKEN,
 		algorithm: 'HS256',
-		expiresIn: generateJwtTime()
+		expiresIn: generateJwtTime(),
 	})
 }
 

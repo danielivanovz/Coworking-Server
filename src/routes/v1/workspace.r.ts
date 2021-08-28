@@ -1,15 +1,23 @@
 import { Router } from 'express'
-import * as workspaceController from '../../controllers/workspaces.c'
+import { WorkspaceController } from '../../controllers/workspaces.c'
 
-const router = Router()
+export class WorkspaceLayer extends WorkspaceController {
+	router: Router = Router()
 
-router.get('/', workspaceController.getWorkspaces)
-router.post('/', workspaceController.addWorkspace)
-router.put('/', workspaceController.updateWorkspace)
-router.delete('/', workspaceController.deleteWorkspace)
+	constructor() {
+		super()
+		this.layer
+	}
 
-router.get('/retrieve', workspaceController.getWorkspacesIDByName)
-router.get('/:query', workspaceController.getWorkspacesByQuery)
-router.get('/:location/:name', workspaceController.getWorkspacesByCityAndName)
+	public layer() {
+		this.router.get('/', this.getWorkspaces)
+		this.router.post('/', this.addWorkspace)
+		this.router.put('/', this.updateWorkspace)
+		this.router.delete('/', this.deleteWorkspace)
+		this.router.get('/retrieve', this.getWorkspacesIDByName)
+		this.router.get('/:query', this.getWorkspacesByQuery)
+		this.router.get('/:location/:name', this.getWorkspacesByCityAndName)
+	}
+}
 
-export default router
+export const workspace = new WorkspaceLayer()

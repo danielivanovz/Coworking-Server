@@ -1,4 +1,3 @@
-export * from './config'
-export * from './mware'
+export * from './middleware'
 export * from './server'
 export * from './env'

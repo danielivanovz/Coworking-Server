@@ -1,14 +1,15 @@
-import express, { Application } from 'express'
+import { Application } from 'express'
 import { mongo } from '../db/db'
-import { ServerConfiguration } from './config'
-import { Middleware } from './mware'
-export class Server extends Middleware implements ServerConfiguration {
+import { Middleware } from './middleware'
+export class Server extends Middleware {
 	mware: Middleware = new Middleware(this.app)
 	db: typeof mongo = mongo
+	app: Application
 
 	constructor(app: Application) {
 		super(app)
 
+		this.app = app
 		this.connectServer()
 		this.connectMongo()
 	}

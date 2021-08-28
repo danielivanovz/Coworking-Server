@@ -1,16 +1,25 @@
 import { Router } from 'express'
+import { UserController } from '../../controllers/users.c'
 
-import * as userController from '../../controllers/users.c'
 
-const router = Router()
+export class UserLayer extends UserController{
+	router: Router = Router()
 
-router.get('/', userController.getUsers)
-router.post('/', userController.addUser)
-router.put('/', userController.updateUser)
-router.delete('/', userController.deleteUser)
+	constructor() {
+		super()
+		this.layer()
+	}
 
-router.get('/retrieve', userController.getUserIDbyUsername)
-router.get('/id', userController.getUserByID)
-router.get('/:query', userController.getUserWithQuery)
+	public layer() {
+		this.router.get('/', this.getUsers)
+		this.router.post('/', this.addUser)
+		this.router.put('/', this.updateUser)
+		this.router.delete('/', this.deleteUser)
+		
+		this.router.get('/retrieve', this.getUserIDbyUsername)
+		this.router.get('/id', this.getUserByID)
+		this.router.get('/:query', this.getUserWithQuery)
+	}
+}
 
-export default router
+export const user = new UserLayer()

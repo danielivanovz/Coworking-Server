@@ -1,11 +1,20 @@
 import { Router } from 'express'
+import { AuthController } from '../../controllers/auth.c'
 
-import * as authController from '../../controllers/auth.c'
+export class AuthLayer extends AuthController{
+	router: Router = Router()
+	
+	constructor() {
+		super()
+		this.layer()
+	}
 
-const router = Router()
+	public layer() {
+		this.router.post('/login', this.login)
+		this.router.post('/signup', this.signup)
+		this.router.post('/logout', this.logout)
+	} 
+	
+}
 
-router.post('/login', authController.login)
-router.post('/signup', authController.signup)
-router.post('/logout', authController.logout)
-
-export default router
+export const auth = new AuthLayer()

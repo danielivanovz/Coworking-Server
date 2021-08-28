@@ -1,12 +1,17 @@
 import { MongoClient, Db, Collection, InsertOneResult } from 'mongodb'
-import { ServerConfiguration } from '../config'
+import { Environment } from '../config'
 import { C, choose } from '../types'
+import { MongoOptions } from '../types/config'
 import { log } from '../utils'
 
-class MongoConnection extends ServerConfiguration {
+export class MongoConnection extends Environment {
 	client: MongoClient
 	db: Db
 	collection: Collection
+	mongoOptions: MongoOptions = {
+		ignoreUndefined: true,
+		useUnifiedTopology: true,
+	}
 
 	constructor() {
 		super()

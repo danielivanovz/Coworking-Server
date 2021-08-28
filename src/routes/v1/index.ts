@@ -1,14 +1,23 @@
 import { Router } from 'express'
-import space from './space.r'
-import users from './users.r'
-import auth from './auth.r'
-import workspace from './workspace.r'
+import { space, SpaceLayer } from './space.r'
+import { auth, AuthLayer } from './auth.r'
+import { workspace, WorkspaceLayer } from './workspace.r'
+import { Mixin } from 'ts-mixer'
+import { user, UserLayer } from './users.r'
 
-const router = Router()
+export class RoutesLayer extends Mixin(AuthLayer, SpaceLayer, UserLayer, WorkspaceLayer) {
+	router: Router
 
-router.use('/auth', auth)
-router.use('/space', space)
-router.use('/user', users)
-router.use('/workspace', workspace)
+	constructor(router: Router) {
+		super()
+		this.router = router
+		this.routes()
+	}
 
-export default router
+	public routes() {
+		this.router.use('/auth', auth.router)
+		this.router.use('/space', space.router)
+		this.router.use('/user', user.router)
+		this.router.use('/workspace', workspace.router)
+	}
+}

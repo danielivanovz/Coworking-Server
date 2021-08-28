@@ -59,7 +59,7 @@ const statusList = {
 	'507': 'Insufficient Storage',
 	'508': 'Loop Detected',
 	'510': 'Not Extended',
-	'511': 'Network Authentication Required'
+	'511': 'Network Authentication Required',
 }
 
 export default statusList

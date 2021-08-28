@@ -1,14 +1,22 @@
 import { Router } from 'express'
+import { SpaceController } from '../../controllers/space.c'
 
-import * as spaceController from '../../controllers/space.c'
 
-const router = Router()
+export class SpaceLayer extends SpaceController {
+	router: Router = Router()
 
-router.get('/', spaceController.getSpace)
-router.post('/', spaceController.addSpace)
-router.put('/', spaceController.updateSpace)
-router.delete('/', spaceController.deleteSpace)
+	constructor() {
+		super()
+		this.layer()
+	}
 
-router.get('/retrieve', spaceController.getSpaceByID)
+	public layer() {
+		this.router.get('/', this.getSpace)
+		this.router.post('/', this.addSpace)
+		this.router.put('/', this.updateSpace)
+		this.router.delete('/', this.deleteSpace)
+		this.router.get('/retrieve', this.getSpaceByID)
+	}
+}
 
-export default router
+export const space = new SpaceLayer()
