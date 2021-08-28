@@ -7,38 +7,37 @@ import { C, choose } from '../types'
 import { FeedbackType, ErrorType } from '../types/commons'
 import { feedbackHandler } from '../utils'
 
-
-export class WorkspaceController{
-	public async getWorkspaces(req: Request, res: Response, next: NextFunction){
+export class WorkspaceController {
+	public async getWorkspaces(req: Request, res: Response, next: NextFunction) {
 		try {
 			const response = (await mongo.db.collection(choose<string>('WORKSPACE', C)).find().toArray()) as Workspace[]
-	
+
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 		} catch (error) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get Workspaces')
 		}
 	}
-	
-	public async getWorkspacesByQuery(req: Request, res: Response, next: NextFunction){
+
+	public async getWorkspacesByQuery(req: Request, res: Response, next: NextFunction) {
 		try {
 			const fieldQuery: string = Object.keys(req.query).toString().toLowerCase()
-	
+
 			const response = (await mongo.db
 				.collection(choose<string>('WORKSPACE', C))
 				.find({
 					[fieldQuery]: <string>req.query[fieldQuery],
 				})
 				.toArray()) as Workspace[]
-	
+
 			console.log(fieldQuery)
-	
+
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 		} catch (error) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get Workspaces by Query')
 		}
 	}
-	
-	public async getWorkspacesByCityAndName(req: Request, res: Response, next: NextFunction){
+
+	public async getWorkspacesByCityAndName(req: Request, res: Response, next: NextFunction) {
 		try {
 			const response = (await mongo.db
 				.collection(choose<string>('WORKSPACE', C))
@@ -47,31 +46,31 @@ export class WorkspaceController{
 					name: req.params.name.toLowerCase(),
 				})
 				.toArray()) as Workspace[]
-	
+
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 		} catch (error) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get Workspaces by City and Name')
 		}
 	}
-	
-	public async getWorkspacesIDByName(req: Request, res: Response, next: NextFunction){
+
+	public async getWorkspacesIDByName(req: Request, res: Response, next: NextFunction) {
 		try {
 			const response: Document = await mongo.db
 				.collection(choose<string>('WORKSPACE', C))
 				.findOne({ name: { $regex: <string>req.params.name } })
-	
+
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response._id))
 		} catch (error) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get Workspaces by ID')
 		}
 	}
-	
-	public async addWorkspace(req: Request, res: Response, next: NextFunction){
+
+	public async addWorkspace(req: Request, res: Response, next: NextFunction) {
 		try {
 			const response: InsertOneResult<Workspace> = await mongo.db
 				.collection(choose<string>('WORKSPACE', C))
 				.insertOne(req.body)
-	
+
 			res
 				.setHeader('Content-type', 'application/json')
 				.status(200)
@@ -80,20 +79,20 @@ export class WorkspaceController{
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot add Workspaces')
 		}
 	}
-	
-	public async deleteWorkspace(req: Request, res: Response, next: NextFunction){
+
+	public async deleteWorkspace(req: Request, res: Response, next: NextFunction) {
 		try {
 			const response: ModifyResult<Document> = await mongo.db
 				.collection(choose<string>('WORKSPACE', C))
 				.findOneAndDelete({ _id: new ObjectId(<string>req.body.id) })
-	
+
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response.ok))
 		} catch (error) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot delete Workspaces')
 		}
 	}
-	
-	public async updateWorkspace(req: Request, res: Response, next: NextFunction){
+
+	public async updateWorkspace(req: Request, res: Response, next: NextFunction) {
 		try {
 			const response: ModifyResult<Document> = await mongo.db
 				.collection(choose<string>('WORKSPACE', C))
@@ -106,5 +105,5 @@ export class WorkspaceController{
 		} catch (error) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot update Workspaces')
 		}
-	}	
+	}
 }

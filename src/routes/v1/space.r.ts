@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { SpaceController } from '../../controllers/space.c'
 
-
 export class SpaceLayer extends SpaceController {
 	router: Router = Router()
 

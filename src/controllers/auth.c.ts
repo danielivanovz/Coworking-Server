@@ -6,8 +6,7 @@ import { feedbackHandler } from '../utils'
 import { ErrorType, FeedbackType } from '../types/commons'
 import { mongo } from '../db'
 
-
-export class AuthController{
+export class AuthController {
 	public async login(req: Request, res: Response, next: NextFunction) {
 		try {
 			;(await userExistsAndPasswordIsTrue(req))

@@ -1,8 +1,7 @@
 import { Router } from 'express'
 import { UserController } from '../../controllers/users.c'
 
-
-export class UserLayer extends UserController{
+export class UserLayer extends UserController {
 	router: Router = Router()
 
 	constructor() {
@@ -15,7 +14,7 @@ export class UserLayer extends UserController{
 		this.router.post('/', this.addUser)
 		this.router.put('/', this.updateUser)
 		this.router.delete('/', this.deleteUser)
-		
+
 		this.router.get('/retrieve', this.getUserIDbyUsername)
 		this.router.get('/id', this.getUserByID)
 		this.router.get('/:query', this.getUserWithQuery)
