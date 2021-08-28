@@ -6,7 +6,7 @@ export class WorkspaceLayer extends WorkspaceController {
 
 	constructor() {
 		super()
-		this.layer
+		this.layer()
 	}
 
 	public layer() {
