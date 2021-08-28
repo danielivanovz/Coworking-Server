@@ -13,7 +13,6 @@ paths:
       responses:
         "200":
           description: OK
-        
     post:
       tags:
         - User
