@@ -20,12 +20,12 @@ export class AuthController {
 	public async signup(req: Request, res: Response, next: NextFunction) {
 		try {
 			const { username, email }: Pick<User, 'username' | 'email'> = req.body as User
-			;(await mongo.findOne({ email: email }, 'USERS', req.body as User))
-				? await passwordHasher(req)
-				: feedbackHandler(FeedbackType.FAILURE, 409, ErrorType.AUTH, res, next, 'User Already Exist. Please Login')
-			res
-				.status(201)
-				.send({ id: (await mongo.insertOne(req.body, 'USERS')).insertedId, token: await createToken(username) })
+			return (await mongo.findOne({ email: email }, 'USERS', req.body as User))
+				? feedbackHandler(FeedbackType.FAILURE, 409, ErrorType.AUTH, res, next, 'User Already Exist. Please Login')
+				: (await passwordHasher(req),
+				  res
+						.status(201)
+						.send({ id: (await mongo.insertOne(req.body, 'USERS')).insertedId, token: await createToken(username) }))
 		} catch (error) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, 'Failed signing up. Please try again.')
 		}
