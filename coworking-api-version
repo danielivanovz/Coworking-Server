@@ -9,7 +9,7 @@ paths:
     get:
       tags:
         - User
-      summary: "Returns all Users"
+      summary: "get Users"
       responses:
         "200":
           description: OK
