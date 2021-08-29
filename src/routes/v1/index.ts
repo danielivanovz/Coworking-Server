@@ -4,8 +4,10 @@ import { auth, AuthLayer } from './auth.r'
 import { workspace, WorkspaceLayer } from './workspace.r'
 import { Mixin } from 'ts-mixer'
 import { user, UserLayer } from './users.r'
+import { review, ReviewLayer } from './review.r'
 
-export class RoutesLayer extends Mixin(AuthLayer, SpaceLayer, UserLayer, WorkspaceLayer) {
+
+export class RoutesLayer extends Mixin(AuthLayer, SpaceLayer, UserLayer, WorkspaceLayer, ReviewLayer) {
 	router: Router
 
 	constructor(router: Router) {
@@ -19,5 +21,6 @@ export class RoutesLayer extends Mixin(AuthLayer, SpaceLayer, UserLayer, Workspa
 		this.router.use('/space', space.router)
 		this.router.use('/user', user.router)
 		this.router.use('/workspace', workspace.router)
+		this.router.use('/review', review.router)
 	}
 }
