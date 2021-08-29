@@ -14,8 +14,7 @@ export class ReviewLayer extends ReviewController {
 		this.router.post('/', this.addReview)
 		this.router.put('/', this.updateReview)
 		this.router.delete('/', this.deleteReview)
-		this.router.get('/retrieve', this.getReviewByUserID)
-		this.router.get('/retrieve', this.getReviewByWorkspaceID)
+		this.router.get('/retrieve', this.getReviewByQuery)
 	}
 }
 

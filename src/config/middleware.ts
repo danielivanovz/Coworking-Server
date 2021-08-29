@@ -20,8 +20,8 @@ export class Middleware extends Environment {
 		super()
 
 		this.app = app
-		// this.app.use(this.tokenHandler)
-		this.setCors()
+		this.app.use(cors())
+		this.app.use(this.tokenHandler)
 		this.setJSON()
 		this.setUrlEncode()
 		this.setHelmet()
@@ -58,20 +58,20 @@ export class Middleware extends Environment {
 		this.app.use(routes)
 	}
 
-	// async tokenHandler(req: Request, res: Response, next: NextFunction) {
-	// 	const token = req.headers.authorization.replace('Bearer ', '')
-	// 	if (req.path !== '/v1/auth/login' && req.path !== '/v1/auth/signup') {
-	// 		jwt.verify(token, process.env.SECRET_TOKEN, (err, dec) => {
-	// 			if (!err) {
-	// 				res.cookie('jwt-exp', dec.exp, { httpOnly: true }).cookie('username', dec['username'], { httpOnly: true })
-	// 				return next()
-	// 			}
-	// 			feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, 'Invalid Token')
-	// 		})
-	// 	} else {
-	// 		next()
-	// 	}
-	// }
+	async tokenHandler(req: Request, res: Response, next: NextFunction) {
+		const token = req.headers.authorization.replace('Bearer ', '')
+		if (req.path !== '/v1/auth/login' && req.path !== '/v1/auth/signup') {
+			jwt.verify(token, process.env.SECRET_TOKEN, (err, dec) => {
+				if (!err) {
+					res.cookie('jwt-exp', dec.exp, { httpOnly: true }).cookie('username', dec['username'], { httpOnly: true })
+					return next()
+				}
+				feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, 'Invalid Token')
+			})
+		} else {
+			next()
+		}
+	}
 
 	async startServer(app: Application) {
 		app.listen(this.PORT, () => {

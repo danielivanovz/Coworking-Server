@@ -18,37 +18,35 @@ export class ReviewController {
 		}
 	}
 
-	public async getReviewByUserID(req: Request, res: Response, next: NextFunction) {
+	public async getReviewByQuery(req: Request, res: Response, next: NextFunction) {
 		try {
-			const response = (await mongo.db
-				.collection(choose<string>('REVIEW', C))
-				.find({ user_id: req.params[1] })
-				.toArray()) as Review[]
-
-			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
-		} catch (err) {
-			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get review by user ID')
-		}
-	}
-
-	public async getReviewByWorkspaceID(req: Request, res: Response, next: NextFunction) {
-		try {
-			const response = (await mongo.db
-				.collection(choose<string>('REVIEW', C))
-				.find({ workspace_id: req.params.id })
-				.toArray()) as Review[]
-
+			const response = (await mongo.db.collection(choose<string>('REVIEW', C)).find(req.query).toArray()) as Review[]
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 		} catch (err) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get review by workspace ID')
 		}
 	}
 
+	// TODO
+
 	public async addReview(req: Request, res: Response, next: NextFunction) {
 		try {
-			const response = await mongo.db.collection(choose<string>('REVIEW', C)).insertOne(req.body)
+			const { user_id, workspace_id } = req.body as Review
 
-			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response.insertedId))
+			try {
+				const R = (await mongo.findOne({ user_id: user_id }, 'REVIEW')) as Review
+				const U = (await mongo.findOne({ workspace_id: workspace_id }, 'REVIEW')) as Review
+
+				if (R.workspace_id === U.workspace_id) {
+					res.send('NO')
+				} else {
+				}
+			} catch (error) {
+				console.log(' qui ')
+				const K = await mongo.insertOne(req.body, 'REVIEW')
+				console.log(K)
+				res.status(200).send('YES')
+			}
 		} catch (err) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot add review')
 		}
@@ -82,7 +80,3 @@ export class ReviewController {
 		}
 	}
 }
-function insertOne(body: any, arg1: string) {
-    throw new Error('Function not implemented.')
-}
-
