@@ -23,11 +23,9 @@ export class ReviewController {
 			const response = (await mongo.db.collection(choose<string>('REVIEW', C)).find(req.query).toArray()) as Review[]
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 		} catch (err) {
-			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get review by workspace ID')
+			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get review by ID')
 		}
 	}
-
-	// TODO
 
 	public async addReview(req: Request, res: Response, next: NextFunction) {
 		try {
