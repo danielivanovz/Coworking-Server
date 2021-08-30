@@ -6,7 +6,6 @@ import { Mixin } from 'ts-mixer'
 import { user, UserLayer } from './users.r'
 import { review, ReviewLayer } from './review.r'
 
-
 export class RoutesLayer extends Mixin(AuthLayer, SpaceLayer, UserLayer, WorkspaceLayer, ReviewLayer) {
 	router: Router
 

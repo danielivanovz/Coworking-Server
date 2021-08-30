@@ -33,20 +33,12 @@ export class ReviewController {
 		try {
 			const { user_id, workspace_id } = req.body as Review
 
-			try {
-				const R = (await mongo.findOne({ user_id: user_id }, 'REVIEW')) as Review
-				const U = (await mongo.findOne({ workspace_id: workspace_id }, 'REVIEW')) as Review
-
-				if (R.workspace_id === U.workspace_id) {
-					res.send('NO')
-				} else {
-				}
-			} catch (error) {
-				console.log(' qui ')
-				const K = await mongo.insertOne(req.body, 'REVIEW')
-				console.log(K)
-				res.status(200).send('YES')
-			}
+			if(await mongo.findOne({ user_id: user_id, workspace_id: workspace_id }, 'REVIEW')){
+				feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Review already added")
+			} else {
+				const response = await mongo.insertOne(req.body, 'REVIEW')
+				res.status(200).end(JSON.stringify(response.insertedId))
+			}	
 		} catch (err) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot add review')
 		}

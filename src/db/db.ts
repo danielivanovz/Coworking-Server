@@ -42,7 +42,7 @@ export class MongoConnection extends Environment {
 	}
 
 	async find<T>(query: object, collection: string, type?: T) {
-		return (await mongo.db.collection(choose<string>(collection, C)).find(query)) as unknown as typeof type
+		return (await mongo.db.collection(choose<string>(collection, C)).find(query).toArray()) as unknown as typeof type
 	}
 
 	async insertOne<T>(query: object, collection: string, type?: T) {

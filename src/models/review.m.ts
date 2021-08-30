@@ -1,5 +1,5 @@
 import { ObjectId, User } from '.'
-import { Workspace } from './workspace.m';
+import { Workspace } from './workspace.m'
 
 export interface Review {
 	id?: ObjectId
