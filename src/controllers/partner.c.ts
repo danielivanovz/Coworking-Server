@@ -8,7 +8,7 @@ import { NextFunction } from 'connect'
 import { mongo } from '../db/db'
 
 export class PartnerController {
-    public async getPartner(req: Request, res: Response, next: NextFunction) {
+	public async getPartner(req: Request, res: Response, next: NextFunction) {
 		try {
 			const response = (await mongo.db.collection(choose<string>('PARTNER', C)).find().toArray()) as Partner[]
 
@@ -18,21 +18,18 @@ export class PartnerController {
 		}
 	}
 
-    public async getPartnerByQuery(req: Request, res: Response, next: NextFunction) {
+	public async getPartnerByQuery(req: Request, res: Response, next: NextFunction) {
 		try {
-			const response = await mongo.findOne(new ObjectId(<string>req.query.id), 'PARTNER') as Partner
-            console.log(req.body)
+			const response = (await mongo.findOne(new ObjectId(<string>req.query.id), 'PARTNER')) as Partner
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 		} catch (err) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get partner by workspace ID')
 		}
 	}
 
-    public async addPartner(req: Request, res: Response, next: NextFunction) {
+	public async addPartner(req: Request, res: Response, next: NextFunction) {
 		try {
-			const response = await mongo.db
-				.collection(choose<string>('PARTNER', C))
-				.insertOne(req.body)
+			const response = await mongo.db.collection(choose<string>('PARTNER', C)).insertOne(req.body)
 
 			res
 				.setHeader('Content-type', 'application/json')
@@ -48,7 +45,6 @@ export class PartnerController {
 			const response = await mongo.db
 				.collection(choose<string>('PARTNER', C))
 				.findOneAndDelete({ _id: new ObjectId(<string>req.body.id) })
-                console.log(req.body.id)
 
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response.ok))
 		} catch (err) {
@@ -71,6 +67,4 @@ export class PartnerController {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot update partner')
 		}
 	}
-
-
 }

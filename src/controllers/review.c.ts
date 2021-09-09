@@ -11,7 +11,6 @@ export class ReviewController {
 	public async getReview(req: Request, res: Response, next: NextFunction) {
 		try {
 			const response = (await mongo.db.collection(choose<string>('REVIEW', C)).find().toArray()) as Review[]
-
 			res.setHeader('Content-type', 'application/json').status(200).end(JSON.stringify(response))
 		} catch (err) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot get review')
@@ -27,16 +26,43 @@ export class ReviewController {
 		}
 	}
 
+	public async getReviewWithWorkspaceAndUser(req: Request, res: Response, next: NextFunction) {
+		try {
+			const response = (await mongo.db.collection(choose<string>('REVIEW', C)).
+			findOne({'_id': new ObjectId(req.query._id.toString().toLowerCase())}, { projection : { _id: 0}}))
+
+			const workspace = (await mongo.db.collection(choose<string>('WORKSPACE', C)).
+			findOne({'_id': new ObjectId(response.workspace_id.toString().toLowerCase())}, {projection : { review : 0, _id : 0}}))
+
+			const user = (await mongo.db.collection(choose<string>('USERS', C)).
+			findOne({'_id': new ObjectId(response.user_id.toString().toLowerCase())}, { projection : { _id: 0}}))
+			
+			response.user_id=user 
+			response.workspace_id=workspace
+			
+			res.status(200).end(JSON.stringify(response))
+		} catch (err) {
+			feedbackHandler(
+				FeedbackType.FAILURE,
+				400,
+				ErrorType.GENERAL,
+				res,
+				next,
+				'Cannot get Review with Workspace and User'
+			)
+		}
+	}
+
 	public async addReview(req: Request, res: Response, next: NextFunction) {
 		try {
 			const { user_id, workspace_id } = req.body as Review
 
-			if(await mongo.findOne({ user_id: user_id, workspace_id: workspace_id }, 'REVIEW')){
-				feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, "Review already added")
+			if (await mongo.findOne({ user_id: user_id, workspace_id: workspace_id }, 'REVIEW')) {
+				feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Review already added')
 			} else {
 				const response = await mongo.insertOne(req.body, 'REVIEW')
 				res.status(200).end(JSON.stringify(response.insertedId))
-			}	
+			}
 		} catch (err) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.GENERAL, res, next, 'Cannot add review')
 		}

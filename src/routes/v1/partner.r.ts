@@ -19,5 +19,3 @@ export class PartnerLayer extends PartnerController {
 }
 
 export const partner = new PartnerLayer()
-
-

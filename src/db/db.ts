@@ -46,7 +46,9 @@ export class MongoConnection extends Environment {
 	}
 
 	async insertOne<T>(query: object, collection: string, type?: T) {
-		return (await mongo.db.collection(choose<string>(collection, C)).insertOne(query)) as unknown as InsertOneResult<Document>
+		return (await mongo.db
+			.collection(choose<string>(collection, C))
+			.insertOne(query)) as unknown as InsertOneResult<Document>
 	}
 }
 
