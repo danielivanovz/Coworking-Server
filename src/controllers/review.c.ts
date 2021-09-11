@@ -28,18 +28,57 @@ export class ReviewController {
 
 	public async getReviewWithWorkspaceAndUser(req: Request, res: Response, next: NextFunction) {
 		try {
-			const response = (await mongo.db.collection(choose<string>('REVIEW', C)).
-			findOne({'_id': new ObjectId(req.query._id.toString().toLowerCase())}, { projection : { _id: 0}}))
+			const pipeline = [
+				{
+					$match: {
+						_id : new ObjectId(req.query._id.toString().toLowerCase())
+					}
+				}, {
+					$lookup: {
+						from: 'workspace',
+						localField: 'workspace_id',
+						foreignField: '_id',
+						as: 'workspace'
+					}
+				}, {
+					$unwind: {
+						path: "$workspace",
+						preserveNullAndEmptyArrays: true
+					}
+				}, {
+					$lookup: {
+						from: 'user',
+						localField: 'user_id',
+						foreignField: '_id',
+						as: 'user'
+					}
+				}, {
+					$unwind: {
+						path: '$user',
+						preserveNullAndEmptyArrays: true
+					}
+				}, {
+					$project: {
+						rating: 1,
+						comment: 1,
+						data: 1,
+						username: "$user.username",
+						user_media: "$user.media",
+						workspace_name: "$workspace.name",
+						avg_review: "$workspace.average_review",
+						workspace_media: "$workspace.media",
+					}
+				}, {
+					$project: {
+						_id: 0
+					}
+				}
+			]
 
-			const workspace = (await mongo.db.collection(choose<string>('WORKSPACE', C)).
-			findOne({'_id': new ObjectId(response.workspace_id.toString().toLowerCase())}, {projection : { review : 0, _id : 0}}))
-
-			const user = (await mongo.db.collection(choose<string>('USERS', C)).
-			findOne({'_id': new ObjectId(response.user_id.toString().toLowerCase())}, { projection : { _id: 0}}))
-			
-			response.user_id=user 
-			response.workspace_id=workspace
-			
+			const response = await mongo.db
+				.collection(choose<string>('REVIEW', C))
+				.aggregate(pipeline).next()
+				
 			res.status(200).end(JSON.stringify(response))
 		} catch (err) {
 			feedbackHandler(
