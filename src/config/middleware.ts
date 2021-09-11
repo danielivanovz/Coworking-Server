@@ -1,4 +1,4 @@
-import cors from 'cors'
+import cors, { CorsOptions } from 'cors'
 import express, { Application, Response, Request, NextFunction } from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
@@ -15,13 +15,12 @@ export class Middleware extends Environment {
 		format: ':method :url :status :res[content-length] - :response-time ms',
 		options: { stream: { write: (message: string) => log.info(message) } },
 	}
-
 	constructor(app: Application) {
 		super()
 
 		this.app = app
-		// this.app.use(this.tokenHandler)
 		this.setCors()
+		this.app.use(this.tokenHandler)
 		this.setJSON()
 		this.setUrlEncode()
 		this.setHelmet()
@@ -58,20 +57,24 @@ export class Middleware extends Environment {
 		this.app.use(routes)
 	}
 
-	// async tokenHandler(req: Request, res: Response, next: NextFunction) {
-	// 	const token = req.headers.authorization.replace('Bearer ', '')
-	// 	if (req.path !== '/v1/auth/login' && req.path !== '/v1/auth/signup') {
-	// 		jwt.verify(token, process.env.SECRET_TOKEN, (err, dec) => {
-	// 			if (!err) {
-	// 				res.cookie('jwt-exp', dec.exp, { httpOnly: true }).cookie('username', dec['username'], { httpOnly: true })
-	// 				return next()
-	// 			}
-	// 			feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, 'Invalid Token')
-	// 		})
-	// 	} else {
-	// 		next()
-	// 	}
-	// }
+	async tokenHandler(req: Request, res: Response, next: NextFunction) {
+		try {
+			const token = req.headers.authorization.replace('Bearer ', '')
+			if (req.path !== '/v1/auth/login' && req.path !== '/v1/auth/signup') {
+				jwt.verify(token, process.env.SECRET_TOKEN, (err, dec) => {
+					if (!err) {
+						res.cookie('jwt-exp', dec.exp, { httpOnly: true }).cookie('username', dec['username'], { httpOnly: true })
+						return next()
+					}
+					feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, 'Invalid Token')
+				})
+			} else {
+				next()
+			}
+		} catch (error) {
+			feedbackHandler(FeedbackType.FAILURE, 401, ErrorType.AUTH, res, next, 'Invalid Token')
+		}
+	}
 
 	async startServer(app: Application) {
 		app.listen(this.PORT, () => {
