@@ -4,8 +4,7 @@ import { ErrorType, FeedbackType } from '../types/commons'
 import { feedbackHandler } from './feedbackManager'
 
 export const generateJwtTime = () => {
-	const expirationTime = new Date().getTime() + Number(process.env.EXPIRE_TOKEN) * 1000
-	return Math.floor(expirationTime / 1000)
+	return Number(process.env.EXPIRE_TOKEN)
 }
 
 export const createToken = async (payload: string) => {

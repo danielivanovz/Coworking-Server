@@ -11,8 +11,8 @@ export class AuthController {
 		try {
 			;(await userExistsAndPasswordIsTrue(req))
 				? res.status(201).send({
-						token: await createToken(req.body.username),
 						...(await mongo.findOne({ username: req.body.username }, 'USERS', req.body)),
+						token: await createToken(req.body.username),
 				  })
 				: feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, 'Token not created')
 		} catch (error) {
@@ -36,7 +36,9 @@ export class AuthController {
 
 	public async logout(req: Request, res: Response, next: NextFunction) {
 		try {
-			res.clearCookie('jwt-exp').clearCookie('username').status(200).send({ message: 'Successfully logged out' })
+			req.cookies['username'] || req.cookies['jwt-exp']
+				? res.clearCookie('jwt-exp').clearCookie('username').status(200).send({ message: 'Successfully logged out' })
+				: res.send({ message: 'No sessione detected' })
 		} catch (error) {}
 	}
 }
