@@ -10,7 +10,10 @@ export class AuthController {
 	public async login(req: Request, res: Response, next: NextFunction) {
 		try {
 			;(await userExistsAndPasswordIsTrue(req))
-				? res.status(201).send({ username: req.body.username, token: await createToken(req.body.username) })
+				? res.status(201).send({
+						token: await createToken(req.body.username),
+						...(await mongo.findOne({ username: req.body.username }, 'USERS', req.body)),
+				  })
 				: feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, 'Token not created')
 		} catch (error) {
 			feedbackHandler(FeedbackType.FAILURE, 400, ErrorType.AUTH, res, next, 'Login Failed')
